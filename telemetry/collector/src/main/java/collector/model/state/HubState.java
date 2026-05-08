@@ -1,4 +1,4 @@
-package model.state;
+package collector.model.state;
 
 // Перечисление типов событий хаба
 public enum HubState {

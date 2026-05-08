@@ -1,4 +1,4 @@
-package model.state;
+package collector.model.state;
 
 // Перечисление типов устройств, которые могут быть добавлены в систему
 public enum DeviceType {

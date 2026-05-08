@@ -1,10 +1,10 @@
-package model.scenario;
+package collector.model.scenario;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
-import model.state.ConditionType;
-import model.state.ConditionOperation;
+import collector.model.state.ConditionType;
+import collector.model.state.ConditionOperation;
 
 @Getter
 @Builder

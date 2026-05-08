@@ -1,12 +1,13 @@
-package model;
+package collector.model;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import model.state.DeviceType;
+import lombok.*;
+import collector.model.state.DeviceType;
 
 @Getter
-@Builder
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 // Событие датчика движения
 public class MotionSensorEvent extends BaseEvent {
     @NotNull
@@ -15,10 +16,9 @@ public class MotionSensorEvent extends BaseEvent {
     private Boolean motion;         // Наличие/отсутствие движения
     @NotNull
     private Integer voltage;        // Напряжение
-    private DeviceType type;
 
     @Override
-    public DeviceType getType() {
-        return DeviceType.MOTION_SENSOR_EVENT;
+    public String getType() {
+        return DeviceType.MOTION_SENSOR_EVENT.toString();
     }
 }

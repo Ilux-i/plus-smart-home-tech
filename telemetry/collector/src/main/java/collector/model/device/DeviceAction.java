@@ -1,9 +1,9 @@
-package model.device;
+package collector.model.device;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
-import model.state.HubState;
+import collector.model.state.HubState;
 
 @Getter
 @Builder

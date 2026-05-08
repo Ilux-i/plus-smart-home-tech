@@ -1,12 +1,13 @@
-package model;
+package collector.model;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import model.state.DeviceType;
+import lombok.*;
+import collector.model.state.DeviceType;
 
 @Getter
-@Builder
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 // Событие климатического датчика, содержащее информацию о температуре, влажности и уровне CO2
 public class ClimateSensorEvent extends BaseEvent {
     @NotNull
@@ -15,10 +16,9 @@ public class ClimateSensorEvent extends BaseEvent {
     private Integer humidity;           // Влажность.
     @NotNull
     private Integer co2Level;           // Уровень CO2.
-    private DeviceType type;
 
     @Override
-    public DeviceType getType() {
-        return DeviceType.CLIMATE_SENSOR_EVENT;
+    public String getType() {
+        return DeviceType.CLIMATE_SENSOR_EVENT.toString();
     }
 }

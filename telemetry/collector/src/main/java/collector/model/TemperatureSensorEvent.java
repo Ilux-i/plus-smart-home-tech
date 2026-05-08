@@ -1,9 +1,9 @@
-package model;
+package collector.model;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
-import model.state.DeviceType;
+import collector.model.state.DeviceType;
 
 @Getter
 @Builder
@@ -13,10 +13,9 @@ public class TemperatureSensorEvent extends  BaseEvent {
     private Integer temperatureC;   // Температура в градусах Цельсия
     @NotNull
     private Integer temperatureF;   // Температура в градусах Фаренгейта
-    private DeviceType type;
 
     @Override
-    public DeviceType getType() {
-        return DeviceType.TEMPERATURE_SENSOR_EVENT;
+    public String getType() {
+        return DeviceType.TEMPERATURE_SENSOR_EVENT.toString();
     }
 }

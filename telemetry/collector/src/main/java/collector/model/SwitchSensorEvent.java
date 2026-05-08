@@ -1,20 +1,20 @@
-package model;
+package collector.model;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import model.state.DeviceType;
+import lombok.*;
+import collector.model.state.DeviceType;
 
 @Getter
-@Builder
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 // Событие датчика переключателя, содержащее информацию о текущем состоянии переключателя
 public class SwitchSensorEvent extends BaseEvent {
     @NotNull
     private Boolean state;          // Текущее состояние переключателя
-    private DeviceType type;
 
     @Override
-    public DeviceType getType() {
-        return DeviceType.SWITCH_SENSOR_EVENT;
+    public String getType() {
+        return DeviceType.SWITCH_SENSOR_EVENT.toString();
     }
 }

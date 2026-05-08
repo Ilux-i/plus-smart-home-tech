@@ -1,5 +1,7 @@
-import model.BaseEvent;
-import model.device.DeviceAddedEvent;
+package collector;
+
+import collector.model.BaseEvent;
+import collector.model.device.BaseDeviceEvent;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,7 @@ public class CollectorController {
     // Эндпоинт для обработки событий от хаба
     @PostMapping("/hubs")
     public void processingEventsFromHub(
-            @RequestBody DeviceAddedEvent deviceAddedEvent
+            @RequestBody BaseDeviceEvent deviceEvent
     ) {
 
     }
