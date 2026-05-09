@@ -1,6 +1,7 @@
 package collector.model;
 
 import collector.model.state.DeviceType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.NotNull;
@@ -35,5 +36,6 @@ public abstract class BaseEvent {
     private DeviceType type;
 
     @NotNull
+    @JsonProperty("type")
     public abstract String getType();
 }

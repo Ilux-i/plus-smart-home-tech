@@ -16,6 +16,6 @@ public class LightSensorEvent extends BaseEvent {
 
     @Override
     public String getType() {
-        return DeviceType.LIGHT_SENSOR_EVENT.toString();
+        return DeviceType.LIGHT_SENSOR.toString();
     }
 }

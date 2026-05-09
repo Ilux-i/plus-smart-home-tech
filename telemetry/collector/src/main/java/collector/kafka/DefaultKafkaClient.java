@@ -50,6 +50,7 @@ public class DefaultKafkaClient implements KafkaClient {
         }
     }
 
+//    Для бинарной сериализации
     private Properties createProducerProps() {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);

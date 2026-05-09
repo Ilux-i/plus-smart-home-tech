@@ -27,54 +27,41 @@ public class AvroMapper {
         avroEvent.setHubId(event.getHubId());
 
         if (event.getTimestamp() != null) {
-            avroEvent.setTimestamp(event.getTimestamp().toEpochMilli());
+            avroEvent.setTimestamp(event.getTimestamp());
         } else {
-            avroEvent.setTimestamp(Instant.now().toEpochMilli());
+            avroEvent.setTimestamp(Instant.now());
         }
 
         switch (event) {
             case ClimateSensorEvent cse -> {
                 ClimateSensorAvro data = new ClimateSensorAvro();
-
                 data.setTemperatureC(cse.getTemperatureC());
                 data.setHumidity(cse.getHumidity());
                 data.setCo2Level(cse.getCo2Level());
-
                 avroEvent.setPayload(data);
             }
             case LightSensorEvent lse -> {
                 LightSensorAvro data = new LightSensorAvro();
-
                 data.setLinkQuality(lse.getLinkQuality());
                 data.setLuminosity(lse.getLuminosity());
-
                 avroEvent.setPayload(data);
             }
             case MotionSensorEvent mse -> {
                 MotionSensorAvro data = new MotionSensorAvro();
-
                 data.setLinkQuality(mse.getLinkQuality());
                 data.setMotion(mse.getMotion());
                 data.setVoltage(mse.getVoltage());
-
                 avroEvent.setPayload(data);
             }
             case SwitchSensorEvent sse -> {
                 SwitchSensorAvro data = new SwitchSensorAvro();
-
                 data.setState(sse.getState());
-
                 avroEvent.setPayload(data);
             }
             case TemperatureSensorEvent tse -> {
                 TemperatureSensorAvro data = new TemperatureSensorAvro();
-
-                data.setId(tse.getId());
-                data.setHubId(tse.getHubId());
-                data.setTimestamp(tse.getTimestamp() != null ? tse.getTimestamp().toEpochMilli() : Instant.now().toEpochMilli());
                 data.setTemperatureC(tse.getTemperatureC());
                 data.setTemperatureF(tse.getTemperatureF());
-
                 avroEvent.setPayload(data);
             }
             default -> throw new IllegalArgumentException("Unknown sensor event type: " + event.getClass().getSimpleName());
@@ -89,18 +76,16 @@ public class AvroMapper {
         avroEvent.setHubId(event.getHubId());
 
         if (event.getTimestamp() != null) {
-            avroEvent.setTimestamp(event.getTimestamp().toEpochMilli());
+            avroEvent.setTimestamp(event.getTimestamp());
         } else {
-            avroEvent.setTimestamp(Instant.now().toEpochMilli());
+            avroEvent.setTimestamp(Instant.now());
         }
 
         switch (event) {
             case DeviceAddedEvent dae -> {
                 DeviceAddedEventAvro data = new DeviceAddedEventAvro();
-
                 data.setId(dae.getId());
-                data.setType(DeviceTypeAvro.valueOf(dae.getType()));
-
+                data.setType(DeviceTypeAvro.valueOf(dae.getDeviceType()));
                 avroEvent.setPayload(data);
             }
 
@@ -141,22 +126,18 @@ public class AvroMapper {
 
     private ScenarioConditionAvro mapConditionToAvro(ScenarioCondition condition) {
         ScenarioConditionAvro avro = new ScenarioConditionAvro();
-
         avro.setSensorId(condition.getSensorId());
         avro.setType(ConditionTypeAvro.valueOf(condition.getType().name()));
         avro.setOperation(ConditionOperationAvro.valueOf(condition.getOperation().name()));
         avro.setValue(condition.getValue());
-
         return avro;
     }
 
     private DeviceActionAvro mapActionToAvro(DeviceAction action) {
         DeviceActionAvro avro = new DeviceActionAvro();
-
         avro.setSensorId(action.getSensorId());
         avro.setType(ActionTypeAvro.valueOf(action.getType().name()));
         avro.setValue(action.getValue());
-
         return avro;
     }
 }

@@ -16,6 +16,6 @@ public class TemperatureSensorEvent extends  BaseEvent {
 
     @Override
     public String getType() {
-        return DeviceType.TEMPERATURE_SENSOR_EVENT.toString();
+        return DeviceType.TEMPERATURE_SENSOR.toString();
     }
 }

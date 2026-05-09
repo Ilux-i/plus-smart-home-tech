@@ -19,6 +19,6 @@ public class ClimateSensorEvent extends BaseEvent {
 
     @Override
     public String getType() {
-        return DeviceType.CLIMATE_SENSOR_EVENT.toString();
+        return DeviceType.CLIMATE_SENSOR.toString();
     }
 }

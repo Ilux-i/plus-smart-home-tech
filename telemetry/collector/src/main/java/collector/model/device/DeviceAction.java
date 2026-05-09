@@ -1,9 +1,9 @@
 package collector.model.device;
 
+import collector.model.state.ActionType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
-import collector.model.state.HubState;
 
 @Getter
 @Builder
@@ -12,6 +12,6 @@ public class DeviceAction {
     @NotNull
     private String sensorId;       // Идентификатор датчика, связанного с действием
     @NotNull
-    private HubState type;          // Типы событий от хаба
+    private ActionType type;          // Тип действия при срабатывании условия активации сценария
     private Integer value;          // Необязательное значение, связанное с действием
 }

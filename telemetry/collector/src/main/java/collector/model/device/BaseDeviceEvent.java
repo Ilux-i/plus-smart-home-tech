@@ -3,6 +3,7 @@ package collector.model.device;
 import collector.model.scenario.ScenarioAddedEvent;
 import collector.model.scenario.ScenarioRemovedEvent;
 import collector.model.state.HubState;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.NotNull;
@@ -31,8 +32,9 @@ public abstract class BaseDeviceEvent {
     private String hubId;                           // Идентификатор хаба, связанный с событием
     @NotNull
     private Instant timestamp;                      // Временная метка события
-    private HubState type;                          // Тип события от хаба
+    private HubState eventType;                          // Тип события от хаба
 
     @NotNull
+    @JsonProperty("type")
     public abstract String getType();
 }

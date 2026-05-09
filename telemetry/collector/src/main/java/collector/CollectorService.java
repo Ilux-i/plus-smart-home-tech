@@ -26,14 +26,15 @@ public class CollectorService {
     private static final String SENSOR_TOPIC = "telemetry.sensors.v1";
     private static final String HUB_TOPIC = "telemetry.hubs.v1";
 
+
     private final KafkaClient kafkaClient;
     private final AvroMapper avroMapper;
 
-    // Старта прослушки топиков
+    // Инициализация прослушки топиков
     @PostConstruct
     public void init() {
-        startConsumingSensors();
-        startConsumingHubs();
+//        startConsumingSensors();
+//        startConsumingHubs();
     }
 
     // Работа с топиком датчиков

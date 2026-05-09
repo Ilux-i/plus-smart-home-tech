@@ -19,6 +19,6 @@ public class MotionSensorEvent extends BaseEvent {
 
     @Override
     public String getType() {
-        return DeviceType.MOTION_SENSOR_EVENT.toString();
+        return DeviceType.MOTION_SENSOR.toString();
     }
 }

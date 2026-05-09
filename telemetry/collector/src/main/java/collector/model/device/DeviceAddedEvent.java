@@ -24,4 +24,8 @@ public class DeviceAddedEvent extends BaseDeviceEvent {
     public String getType() {
         return HubState.DEVICE_ADDED.toString();
     }
+
+    public String getDeviceType() {
+        return deviceType.name();
+    }
 }

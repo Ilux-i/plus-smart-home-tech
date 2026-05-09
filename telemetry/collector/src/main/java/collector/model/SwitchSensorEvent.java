@@ -15,6 +15,6 @@ public class SwitchSensorEvent extends BaseEvent {
 
     @Override
     public String getType() {
-        return DeviceType.SWITCH_SENSOR_EVENT.toString();
+        return DeviceType.SWITCH_SENSOR.toString();
     }
 }
