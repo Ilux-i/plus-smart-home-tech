@@ -119,7 +119,6 @@ public class CollectorService {
             }
             case TemperatureSensorAvro tempSensor -> {
                 System.out.println("  Type: TEMPERATURE_SENSOR");
-                System.out.println("  Sensor ID (internal): " + tempSensor.getId());
                 System.out.println("  Temperature (C): " + tempSensor.getTemperatureC());
                 System.out.println("  Temperature (F): " + tempSensor.getTemperatureF());
             }
