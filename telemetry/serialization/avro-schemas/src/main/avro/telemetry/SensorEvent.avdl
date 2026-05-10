@@ -33,7 +33,6 @@ protocol SensorEventProtocol {
 		timestamp_ms timestamp;
 
 		union {
-			null,
 			ClimateSensorAvro,
 			LightSensorAvro,
 			MotionSensorAvro,

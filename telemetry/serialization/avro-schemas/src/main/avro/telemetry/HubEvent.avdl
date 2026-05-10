@@ -69,7 +69,6 @@ protocol HubEventProtocol {
 		timestamp_ms timestamp;
 
 		union {
-			null,
 			DeviceAddedEventAvro,
 			DeviceRemovedEventAvro,
 			ScenarioAddedEventAvro,
