@@ -31,6 +31,8 @@ public class CollectorService {
 
         Producer<String, SpecificRecordBase> producer = kafkaClient.getProducer(); // Получение producer
 
+        log.info("Preparing to send to topic {}: {}", SENSOR_TOPIC, avroRecord.toString());
+
         ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>( // Формирование записи
                 SENSOR_TOPIC,
                 event.getHubId(),
@@ -38,18 +40,13 @@ public class CollectorService {
 
         producer.send(record, (metadata, exception) -> { // Отправка записи в топик
             if (exception != null) {
-                log.error("ERROR sending sensor event [ID: {}, Hub: {}]: {}",
-                        event.getId(),
-                        event.getHubId(),
-                        exception.getMessage()
-                );
+                log.error("KAFKA ERROR: {}", exception.getMessage());
             } else {
-                log.debug("SUCCESS sent sensor event to partition {}, offset {}",
-                        metadata.partition(),
-                        metadata.offset()
-                );
+                log.info("KAFKA SUCCESS: {}", metadata.offset());
             }
         });
+
+        flushProducer(producer);
     }
 
     // Работа с топиком хаба
@@ -59,6 +56,8 @@ public class CollectorService {
 
         Producer<String, SpecificRecordBase> producer = kafkaClient.getProducer(); // Получение producer
 
+        log.info("Preparing to send to topic {}: {}", HUB_TOPIC, avroRecord.toString());
+
         ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>( // Формирование записи
                 HUB_TOPIC,
                 event.getHubId(),
@@ -66,12 +65,21 @@ public class CollectorService {
 
         producer.send(record, (metadata, exception) -> { // Отправка записи в топик
             if (exception != null) {
-                log.error("ERROR sending hub event [Hub: {}, Type: {}]: {}",
-                        event.getHubId(),
-                        event.getType(),
-                        exception.getMessage());
+                log.error("KAFKA ERROR: {}", exception.getMessage());
+            } else {
+                log.info("KAFKA SUCCESS: {}", metadata.offset());
             }
         });
+
+        flushProducer(producer);
+    }
+
+    private void flushProducer(Producer<String, SpecificRecordBase> producer) {
+        try {
+            producer.flush();
+        } catch (Exception e) {
+            log.error("Flush error", e);
+        }
     }
 
 }
