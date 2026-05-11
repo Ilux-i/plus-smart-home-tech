@@ -75,8 +75,8 @@ public class AvroMapper {
 
         avroEvent.setHubId(event.getHubId());
 
-        if (event.getTimestamp() != null) {
-            avroEvent.setTimestamp(event.getTimestamp());
+        if (event.getTimestamp() != null && !event.getTimestamp().isBlank()) {
+            avroEvent.setTimestamp(Instant.parse(event.getTimestamp()));
         } else {
             avroEvent.setTimestamp(Instant.now());
         }

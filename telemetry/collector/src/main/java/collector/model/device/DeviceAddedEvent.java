@@ -1,12 +1,14 @@
 package collector.model.device;
 
 import collector.model.state.HubState;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import collector.model.state.DeviceType;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.yandex.practicum.kafka.telemetry.event.DeviceTypeAvro;
 
 @Getter
 @Setter
@@ -17,7 +19,8 @@ public class DeviceAddedEvent extends BaseDeviceEvent {
     @NotNull
     private String id;
     @NotNull
-    private DeviceType deviceType;  // Типы событий датчиков
+    @JsonProperty("deviceType")
+    private DeviceType type;  // Типы событий датчиков
 
 
     @Override
@@ -26,6 +29,6 @@ public class DeviceAddedEvent extends BaseDeviceEvent {
     }
 
     public String getDeviceType() {
-        return deviceType.name();
+        return type.name();
     }
 }

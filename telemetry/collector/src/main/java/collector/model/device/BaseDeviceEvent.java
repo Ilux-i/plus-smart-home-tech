@@ -31,7 +31,7 @@ public abstract class BaseDeviceEvent {
     @NotNull
     private String hubId;                           // Идентификатор хаба, связанный с событием
     @NotNull
-    private Instant timestamp;                      // Временная метка события
+    private String timestamp;                      // Временная метка события
     private HubState eventType;                          // Тип события от хаба
 
     @NotNull
