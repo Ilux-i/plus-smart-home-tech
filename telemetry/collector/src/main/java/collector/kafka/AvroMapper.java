@@ -9,7 +9,6 @@ import collector.model.scenario.ScenarioRemovedEvent;
 import collector.model.scenario.ScenarioCondition;
 import collector.model.device.DeviceAction;
 
-import org.apache.avro.specific.SpecificRecordBase;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 
@@ -20,16 +19,16 @@ import java.util.stream.Collectors;
 @Component
 public class AvroMapper {
 
-    public SpecificRecordBase mapSensorEventToAvro(BaseEvent event) {
+    public SensorEventAvro mapSensorEventToAvro(BaseEvent event) {
         SensorEventAvro avroEvent = new SensorEventAvro();
 
         avroEvent.setId(event.getId());
         avroEvent.setHubId(event.getHubId());
 
         if (event.getTimestamp() != null) {
-            avroEvent.setTimestamp(event.getTimestamp());
+            avroEvent.setTimestamp(event.getTimestamp().toEpochMilli());
         } else {
-            avroEvent.setTimestamp(Instant.now());
+            avroEvent.setTimestamp(Instant.now().toEpochMilli());
         }
 
         switch (event) {
@@ -70,22 +69,22 @@ public class AvroMapper {
         return avroEvent;
     }
 
-    public SpecificRecordBase mapHubEventToAvro(BaseDeviceEvent event) {
+    public HubEventAvro mapHubEventToAvro(BaseDeviceEvent event) {
         HubEventAvro avroEvent = new HubEventAvro();
 
         avroEvent.setHubId(event.getHubId());
 
-        if (event.getTimestamp() != null && !event.getTimestamp().isBlank()) {
-            avroEvent.setTimestamp(Instant.parse(event.getTimestamp()));
+        if (event.getTimestamp() != null) {
+            avroEvent.setTimestamp(event.getTimestamp().toEpochMilli());
         } else {
-            avroEvent.setTimestamp(Instant.now());
+            avroEvent.setTimestamp(Instant.now().toEpochMilli());
         }
 
         switch (event) {
             case DeviceAddedEvent dae -> {
                 DeviceAddedEventAvro data = new DeviceAddedEventAvro();
                 data.setId(dae.getId());
-                data.setType(DeviceTypeAvro.valueOf(dae.getDeviceType()));
+                data.setType(DeviceTypeAvro.valueOf(dae.getDeviceType().toString()));
                 avroEvent.setPayload(data);
             }
 

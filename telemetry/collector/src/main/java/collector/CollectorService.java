@@ -6,10 +6,20 @@ import collector.model.BaseEvent;
 import collector.model.device.BaseDeviceEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.avro.io.BinaryEncoder;
+import org.apache.avro.io.DatumWriter;
+import org.apache.avro.io.EncoderFactory;
+import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 
 @Log4j2
@@ -27,51 +37,44 @@ public class CollectorService {
     // Работа с топиком датчиков
 
     public void sendSensorEvent(BaseEvent event) {
-        SpecificRecordBase avroRecord = avroMapper.mapSensorEventToAvro(event); // Маппинг в avro
+        SensorEventAvro avroRecord = avroMapper.mapSensorEventToAvro(event); // Маппинг в avro
 
-        Producer<String, SpecificRecordBase> producer = kafkaClient.getProducer(); // Получение producer
+        KafkaTemplate<String, byte[]> producer = kafkaClient.getProducer(); // Получение producer
 
-        log.info("Preparing to send to topic {}: {}", SENSOR_TOPIC, avroRecord.toString());
+        try {
+            byte[] record = serializeSensorAvro(avroRecord); // Формирование записи
 
-        ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>( // Формирование записи
-                SENSOR_TOPIC,
-                event.getHubId(),
-                avroRecord);
+            producer.send( // Отправка записи
+                    SENSOR_TOPIC,
+                    event.getHubId(),
+                    record
+            );
+    
+        } catch(IOException e) {
+            log.error("KAFKA ERROR: {}", e.getMessage());
+        }
 
-        producer.send(record, (metadata, exception) -> { // Отправка записи в топик
-            if (exception != null) {
-                log.error("KAFKA ERROR: {}", exception.getMessage());
-            } else {
-                log.info("KAFKA SUCCESS: {}", metadata.offset());
-            }
-        });
-
-        flushProducer(producer);
     }
 
     // Работа с топиком хаба
 
     public void sendHubEvent(BaseDeviceEvent event) {
-        SpecificRecordBase avroRecord = avroMapper.mapHubEventToAvro(event); // Маппинг в avro
+        HubEventAvro avroRecord = avroMapper.mapHubEventToAvro(event); // Маппинг в avro
 
-        Producer<String, SpecificRecordBase> producer = kafkaClient.getProducer(); // Получение producer
+        KafkaTemplate<String, byte[]> producer = kafkaClient.getProducer(); // Получение producer
 
-        log.info("Preparing to send to topic {}: {}", HUB_TOPIC, avroRecord.toString());
+        try {
+            byte[] record = serializeHubAvro(avroRecord); // Формирование записи
 
-        ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>( // Формирование записи
-                HUB_TOPIC,
-                event.getHubId(),
-                avroRecord);
+            producer.send( // Отправка записи
+                    HUB_TOPIC,
+                    event.getHubId(),
+                    record
+            );
 
-        producer.send(record, (metadata, exception) -> { // Отправка записи в топик
-            if (exception != null) {
-                log.error("KAFKA ERROR: {}", exception.getMessage());
-            } else {
-                log.info("KAFKA SUCCESS: {}", metadata.offset());
-            }
-        });
-
-        flushProducer(producer);
+        } catch (IOException e) {
+            log.error("KAFKA ERROR: {}", e.getMessage());
+        }
     }
 
     private void flushProducer(Producer<String, SpecificRecordBase> producer) {
@@ -80,6 +83,24 @@ public class CollectorService {
         } catch (Exception e) {
             log.error("Flush error", e);
         }
+    }
+
+    private byte[] serializeSensorAvro(SensorEventAvro event) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        BinaryEncoder encoder = EncoderFactory.get().binaryEncoder(outputStream, null);
+        DatumWriter<SensorEventAvro> writer = new SpecificDatumWriter<>(SensorEventAvro.getClassSchema());
+        writer.write(event, encoder);
+        encoder.flush();
+        return outputStream.toByteArray();
+    }
+
+    private byte[] serializeHubAvro(HubEventAvro event) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        BinaryEncoder encoder = EncoderFactory.get().binaryEncoder(outputStream, null);
+        DatumWriter<HubEventAvro> writer = new SpecificDatumWriter<>(HubEventAvro.getClassSchema());
+        writer.write(event, encoder);
+        encoder.flush();
+        return outputStream.toByteArray();
     }
 
 }

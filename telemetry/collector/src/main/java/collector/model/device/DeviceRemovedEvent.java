@@ -2,22 +2,20 @@ package collector.model.device;
 
 import collector.model.state.HubState;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
+@EqualsAndHashCode(callSuper = true)
 // Событие, сигнализирующее о удалении устройства из системы
 public class DeviceRemovedEvent extends BaseDeviceEvent {
+
     @NotNull
     private String id;
 
+    private HubState type = HubState.DEVICE_REMOVED;
+
     @Override
     public String getType() {
-        return HubState.DEVICE_REMOVED.toString();
+        return type.toString();
     }
 }

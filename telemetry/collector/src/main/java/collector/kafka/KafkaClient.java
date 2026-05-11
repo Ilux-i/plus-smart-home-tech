@@ -1,10 +1,9 @@
 package collector.kafka;
 
-import org.apache.avro.specific.SpecificRecordBase;
-import org.apache.kafka.clients.producer.Producer;
+import org.springframework.kafka.core.KafkaTemplate;
 
 public interface KafkaClient {
 
-    Producer<String, SpecificRecordBase> getProducer();
+    KafkaTemplate<String, byte[]> getProducer();
 
 }
