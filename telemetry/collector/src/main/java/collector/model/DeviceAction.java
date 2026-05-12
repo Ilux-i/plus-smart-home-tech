@@ -1,4 +1,4 @@
-package collector.model.device;
+package collector.model;
 
 import collector.model.state.ActionType;
 import lombok.Data;

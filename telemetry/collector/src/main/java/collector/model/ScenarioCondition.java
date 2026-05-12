@@ -1,4 +1,4 @@
-package collector.model.scenario;
+package collector.model;
 
 import lombok.Data;
 import collector.model.state.ConditionType;

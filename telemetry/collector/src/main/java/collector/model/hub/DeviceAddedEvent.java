@@ -1,4 +1,4 @@
-package collector.model.device;
+package collector.model.hub;
 
 import collector.model.state.HubState;
 import jakarta.validation.constraints.NotNull;

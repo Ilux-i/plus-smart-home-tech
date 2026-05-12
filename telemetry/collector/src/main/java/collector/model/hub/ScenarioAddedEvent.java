@@ -1,11 +1,11 @@
-package collector.model.scenario;
+package collector.model.hub;
 
-import collector.model.device.BaseDeviceEvent;
+import collector.model.ScenarioCondition;
 import collector.model.state.HubState;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import collector.model.device.DeviceAction;
+import collector.model.DeviceAction;
 
 import java.util.List;
 

@@ -1,16 +1,14 @@
-package collector.model;
+package collector.model.sensor;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import collector.model.state.DeviceType;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 // Событие датчика температуры, содержащее информацию о температуре в градусах Цельсия и Фаренгейта
-public class TemperatureSensorEvent extends  BaseEvent {
+public class TemperatureSensorEvent extends BaseSensorEvent {
     @NotNull
     private Integer temperatureC;   // Температура в градусах Цельсия
     @NotNull

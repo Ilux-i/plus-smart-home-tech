@@ -1,6 +1,5 @@
-package collector.model.scenario;
+package collector.model.hub;
 
-import collector.model.device.BaseDeviceEvent;
 import collector.model.state.HubState;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

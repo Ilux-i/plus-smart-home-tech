@@ -1,4 +1,4 @@
-package collector.model;
+package collector.model.sensor;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -7,7 +7,7 @@ import collector.model.state.DeviceType;
 @Data
 @EqualsAndHashCode(callSuper = true)
 // Событие датчика движения
-public class MotionSensorEvent extends BaseEvent {
+public class MotionSensorEvent extends BaseSensorEvent {
 
     @NotNull
     private Integer linkQuality;    // Качество связи

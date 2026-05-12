@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
+import jakarta.annotation.PreDestroy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,17 @@ public class DefaultKafkaClient implements KafkaClient {
         return producer;
     }
 
+    @PreDestroy
+    public void shutdown() {
+        if (producer != null) {
+            try {
+                producer.flush();
+            } catch (Exception e) {
+                System.err.println("Ошибка очистки producer: " + e.getMessage());
+            }
+        }
+    }
+
 //    Для бинарной сериализации
     private Map<String, Object> createProducerProps() {
         Map<String, Object> props = new HashMap<>();
@@ -39,4 +51,3 @@ public class DefaultKafkaClient implements KafkaClient {
     }
 
 }
-

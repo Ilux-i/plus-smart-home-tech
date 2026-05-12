@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Обработка ошибок валидации (@Valid)
+    // Обработка ошибок валидации
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
         log.error("Validation error: {}", ex.getMessage());
@@ -118,8 +118,8 @@ public class GlobalExceptionHandler {
     }
 
     // Обработка всех остальных ошибок
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<ErrorResponse> handleGenericException(Throwable ex) {
         log.error("Unexpected error: {}", ex.getMessage(), ex);
 
         ErrorResponse response = ErrorResponse.builder()

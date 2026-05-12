@@ -1,6 +1,5 @@
-package collector.model;
+package collector.model.sensor;
 
-import collector.model.state.DeviceType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -23,7 +22,7 @@ import java.time.Instant;
         @JsonSubTypes.Type(value = TemperatureSensorEvent.class, name = "TEMPERATURE_SENSOR_EVENT")
 })
 // Базовый класс для событий от датчиков
-public abstract class BaseEvent {
+public abstract class BaseSensorEvent {
 
     @NotNull
     private String id;                    // Идентификатор события датчика.

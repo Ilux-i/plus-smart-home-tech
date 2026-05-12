@@ -2,8 +2,8 @@ package collector;
 
 import collector.kafka.AvroMapper;
 import collector.kafka.KafkaClient;
-import collector.model.BaseEvent;
-import collector.model.device.BaseDeviceEvent;
+import collector.model.sensor.BaseSensorEvent;
+import collector.model.hub.BaseDeviceEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.avro.io.BinaryEncoder;
@@ -12,7 +12,6 @@ import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
@@ -36,7 +35,7 @@ public class CollectorService {
 
     // Работа с топиком датчиков
 
-    public void sendSensorEvent(BaseEvent event) {
+    public void sendSensorEvent(BaseSensorEvent event) {
         SensorEventAvro avroRecord = avroMapper.mapSensorEventToAvro(event); // Маппинг в avro
 
         KafkaTemplate<String, byte[]> producer = kafkaClient.getProducer(); // Получение producer
@@ -49,8 +48,8 @@ public class CollectorService {
                     event.getHubId(),
                     record
             );
-    
-        } catch(IOException e) {
+
+        } catch (IOException e) {
             log.error("KAFKA ERROR: {}", e.getMessage());
         }
 

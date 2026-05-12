@@ -1,4 +1,4 @@
-package collector.model;
+package collector.model.sensor;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -7,7 +7,7 @@ import collector.model.state.DeviceType;
 @Data
 @EqualsAndHashCode(callSuper = true)
 // Событие климатического датчика, содержащее информацию о температуре, влажности и уровне CO2
-public class ClimateSensorEvent extends BaseEvent {
+public class ClimateSensorEvent extends BaseSensorEvent {
 
     @NotNull
     private Integer temperatureC;       // Уровень температуры по шкале Цельсия.

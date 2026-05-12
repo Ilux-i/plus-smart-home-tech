@@ -1,4 +1,4 @@
-package collector.model;
+package collector.model.sensor;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -7,7 +7,7 @@ import collector.model.state.DeviceType;
 @Data
 @EqualsAndHashCode(callSuper = true)
 // Событие датчика переключателя, содержащее информацию о текущем состоянии переключателя
-public class SwitchSensorEvent extends BaseEvent {
+public class SwitchSensorEvent extends BaseSensorEvent {
     @NotNull
     private Boolean state;          // Текущее состояние переключателя
 

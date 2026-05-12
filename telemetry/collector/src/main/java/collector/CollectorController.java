@@ -1,7 +1,7 @@
 package collector;
 
-import collector.model.BaseEvent;
-import collector.model.device.BaseDeviceEvent;
+import collector.model.sensor.BaseSensorEvent;
+import collector.model.hub.BaseDeviceEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +18,7 @@ public class CollectorController {
     // Эндпоинт для обработки событий от датчиков
     @PostMapping("/sensors")
     public void processingEventsFromSensors(
-            @RequestBody BaseEvent event
+            @RequestBody BaseSensorEvent event
             ) {
         service.sendSensorEvent(event);
     }

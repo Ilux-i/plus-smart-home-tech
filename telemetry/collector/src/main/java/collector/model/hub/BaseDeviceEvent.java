@@ -1,7 +1,5 @@
-package collector.model.device;
+package collector.model.hub;
 
-import collector.model.scenario.ScenarioAddedEvent;
-import collector.model.scenario.ScenarioRemovedEvent;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.NotNull;
