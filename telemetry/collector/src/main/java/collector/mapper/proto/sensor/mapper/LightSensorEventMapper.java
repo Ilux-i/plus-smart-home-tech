@@ -1,0 +1,20 @@
+package collector.mapper.proto.sensor.mapper;
+
+import collector.model.sensor.LightSensorEvent;
+import org.springframework.stereotype.Component;
+import ru.yandex.practicum.grpc.telemetry.event.LightSensorProto;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
+
+@Component
+public class LightSensorEventMapper implements SensorProtoMapper<LightSensorEvent> {
+    @Override public Class<LightSensorEvent> getEventType() { return LightSensorEvent.class; }
+
+    @Override
+    public void mapPayload(LightSensorEvent event, SensorEventProto.Builder builder) {
+        LightSensorProto payload = LightSensorProto.newBuilder()
+                .setLinkQuality(event.getLinkQuality())
+                .setLuminosity(event.getLuminosity())
+                .build();
+        builder.setLightSensor(payload);
+    }
+}
