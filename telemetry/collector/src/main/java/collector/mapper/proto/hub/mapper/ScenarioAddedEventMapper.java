@@ -3,10 +3,15 @@ package collector.mapper.proto.hub.mapper;
 import collector.model.DeviceAction;
 import collector.model.ScenarioCondition;
 import collector.model.hub.ScenarioAddedEvent;
+import collector.model.state.ActionType;
+import collector.model.state.ConditionOperation;
+import collector.model.state.ConditionType;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.grpc.telemetry.event.*;
 
-@Component
+import java.util.stream.Collectors;
+
+@Component("protoScenarioAddedEventMapper")
 public class ScenarioAddedEventMapper implements HubProtoMapper<ScenarioAddedEvent> {
     @Override
     public Class<ScenarioAddedEvent> getEventType() {
@@ -29,27 +34,48 @@ public class ScenarioAddedEventMapper implements HubProtoMapper<ScenarioAddedEve
         builder.setScenarioAdded(payloadBuilder.build());
     }
 
-    private ScenarioConditionProto mapConditionToProto(ScenarioCondition condition) {
-        ScenarioConditionProto.Builder protoCond = ScenarioConditionProto.newBuilder()
-                .setSensorId(condition.getSensorId())
-                .setType(ConditionTypeProto.valueOf(condition.getType().name()))
-                .setOperation(ConditionOperationProto.valueOf(condition.getOperation().name()));
-
-        Integer val = condition.getValue();
-        if (val != null) {
-            protoCond.setIntValue(val);
-        }
-        return protoCond.build();
+    @Override
+    public ScenarioAddedEvent mapFromProto(HubEventProto proto) {
+        ScenarioAddedEventProto p = proto.getScenarioAdded();
+        ScenarioAddedEvent event = new ScenarioAddedEvent();
+        event.setName(p.getName());
+        event.setConditions(p.getConditionList().stream().map(this::mapConditionFromProto).collect(Collectors.toList()));
+        event.setActions(p.getActionList().stream().map(this::mapActionFromProto).collect(Collectors.toList()));
+        return event;
     }
 
-    private DeviceActionProto mapActionToProto(DeviceAction action) {
-        DeviceActionProto.Builder protoAction = DeviceActionProto.newBuilder()
-                .setSensorId(action.getSensorId())
-                .setType(ActionTypeProto.valueOf(action.getType().name()));
+    private ScenarioConditionProto mapConditionToProto(ScenarioCondition c) {
+        ScenarioConditionProto.Builder b = ScenarioConditionProto.newBuilder()
+                .setSensorId(c.getSensorId())
+                .setType(ConditionTypeProto.valueOf(c.getType().name()))
+                .setOperation(ConditionOperationProto.valueOf(c.getOperation().name()));
+        if (c.getValue() != null) b.setIntValue(c.getValue());
+        return b.build();
+    }
 
-        if (action.getValue() != null) {
-            protoAction.setValue(action.getValue());
-        }
-        return protoAction.build();
+    private ScenarioCondition mapConditionFromProto(ScenarioConditionProto p) {
+        ScenarioCondition c = new ScenarioCondition();
+        c.setSensorId(p.getSensorId());
+        c.setType(ConditionType.valueOf(p.getType().name()));
+        c.setOperation(ConditionOperation.valueOf(p.getOperation().name()));
+        if (p.hasIntValue()) c.setValue(p.getIntValue());
+        else if (p.hasBoolValue()) c.setValue(p.getBoolValue() ? 1 : 0);
+        return c;
+    }
+
+    private DeviceActionProto mapActionToProto(DeviceAction a) {
+        DeviceActionProto.Builder b = DeviceActionProto.newBuilder()
+                .setSensorId(a.getSensorId())
+                .setType(ActionTypeProto.valueOf(a.getType().name()));
+        if (a.getValue() != null) b.setValue(a.getValue());
+        return b.build();
+    }
+
+    private DeviceAction mapActionFromProto(DeviceActionProto p) {
+        DeviceAction a = new DeviceAction();
+        a.setSensorId(p.getSensorId());
+        a.setType(ActionType.valueOf(p.getType().name()));
+        if (p.hasValue()) a.setValue(p.getValue());
+        return a;
     }
 }

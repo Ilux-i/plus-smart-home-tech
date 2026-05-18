@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.grpc.telemetry.event.MotionSensorProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 
-@Component
+@Component("protoMotionSensorEventMapper")
 public class MotionSensorEventMapper implements SensorProtoMapper<MotionSensorEvent> {
     @Override
     public Class<MotionSensorEvent> getEventType() {
@@ -21,5 +21,15 @@ public class MotionSensorEventMapper implements SensorProtoMapper<MotionSensorEv
                 .build();
 
         builder.setMotionSensor(payload);
+    }
+
+    @Override
+    public MotionSensorEvent mapFromProto(SensorEventProto proto) {
+        MotionSensorProto p = proto.getMotionSensor();
+        MotionSensorEvent event = new MotionSensorEvent();
+        event.setLinkQuality(p.getLinkQuality());
+        event.setMotion(p.getMotion());
+        event.setVoltage(p.getVoltage());
+        return event;
     }
 }

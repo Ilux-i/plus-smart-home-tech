@@ -83,6 +83,19 @@
             </dependency>
 
             <!--    / GRPC dependencies management        -->
+            <!-- gRPC Server -->
+            <dependency>
+                <groupId>net.devh</groupId>
+                <artifactId>grpc-server-spring-boot-starter</artifactId>
+                <!-- версия подтянется из parent -->
+            </dependency>
+
+            <!-- gRPC Runtime (если не подтянется транзитивно) -->
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-netty-shaded</artifactId>
+                <scope>runtime</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

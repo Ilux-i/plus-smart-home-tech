@@ -1,12 +1,13 @@
 package collector.mapper.proto.hub.mapper;
 
 import collector.model.hub.DeviceAddedEvent;
+import collector.model.state.DeviceType;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.grpc.telemetry.event.DeviceAddedEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.DeviceTypeProto;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 
-@Component
+@Component("protoDeviceAddedEventMapper")
 public class DeviceAddedEventMapper implements HubProtoMapper<DeviceAddedEvent> {
     @Override
     public Class<DeviceAddedEvent> getEventType() {
@@ -22,6 +23,15 @@ public class DeviceAddedEventMapper implements HubProtoMapper<DeviceAddedEvent> 
 
         // Заполняем поле oneof
         builder.setDeviceAdded(payload);
+    }
+
+    @Override
+    public DeviceAddedEvent mapFromProto(HubEventProto proto) {
+        DeviceAddedEventProto p = proto.getDeviceAdded();
+        DeviceAddedEvent event = new DeviceAddedEvent();
+        event.setId(p.getId());
+        event.setDeviceType(DeviceType.valueOf(p.getType().name()));
+        return event;
     }
 
     private DeviceTypeProto mapDeviceType(String type) {

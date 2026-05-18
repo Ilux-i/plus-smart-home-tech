@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.grpc.telemetry.event.LightSensorProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 
-@Component
+@Component("protoLightSensorEventMapper")
 public class LightSensorEventMapper implements SensorProtoMapper<LightSensorEvent> {
     @Override public Class<LightSensorEvent> getEventType() { return LightSensorEvent.class; }
 
@@ -16,5 +16,14 @@ public class LightSensorEventMapper implements SensorProtoMapper<LightSensorEven
                 .setLuminosity(event.getLuminosity())
                 .build();
         builder.setLightSensor(payload);
+    }
+
+    @Override
+    public LightSensorEvent mapFromProto(SensorEventProto proto) {
+        LightSensorProto p = proto.getLightSensor();
+        LightSensorEvent event = new LightSensorEvent();
+        event.setLinkQuality(p.getLinkQuality());
+        event.setLuminosity(p.getLuminosity());
+        return event;
     }
 }

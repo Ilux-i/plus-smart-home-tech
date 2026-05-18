@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.grpc.telemetry.event.ClimateSensorProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 
-@Component
+@Component("protoClimateSensorEventMapper")
 public class ClimateSensorEventMapper implements SensorProtoMapper<ClimateSensorEvent> {
     @Override public Class<ClimateSensorEvent> getEventType() { return ClimateSensorEvent.class; }
 
@@ -17,5 +17,15 @@ public class ClimateSensorEventMapper implements SensorProtoMapper<ClimateSensor
                 .setCo2Level(event.getCo2Level())
                 .build();
         builder.setClimateSensor(payload);
+    }
+
+    @Override
+    public ClimateSensorEvent mapFromProto(SensorEventProto proto) {
+        ClimateSensorProto p = proto.getClimateSensor();
+        ClimateSensorEvent event = new ClimateSensorEvent();
+        event.setTemperatureC(p.getTemperatureC());
+        event.setHumidity(p.getHumidity());
+        event.setCo2Level(p.getCo2Level());
+        return event;
     }
 }

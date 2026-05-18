@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.ScenarioRemovedEventProto;
 
-@Component
+@Component("protoScenarioRemovedEventMapper")
 public class ScenarioRemovedEventMapper implements HubProtoMapper<ScenarioRemovedEvent> {
     @Override
     public Class<ScenarioRemovedEvent> getEventType() {
@@ -18,5 +18,13 @@ public class ScenarioRemovedEventMapper implements HubProtoMapper<ScenarioRemove
                 .setName(event.getName())
                 .build();
         builder.setScenarioRemoved(payload);
+    }
+
+    @Override
+    public ScenarioRemovedEvent mapFromProto(HubEventProto proto) {
+        ScenarioRemovedEventProto p = proto.getScenarioRemoved();
+        ScenarioRemovedEvent event = new ScenarioRemovedEvent();
+        event.setName(p.getName());
+        return event;
     }
 }

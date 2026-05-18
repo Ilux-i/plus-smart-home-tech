@@ -6,4 +6,5 @@ import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 public interface HubProtoMapper<T extends BaseDeviceEvent> {
     Class<T> getEventType();
     void mapPayload(T event, HubEventProto.Builder builder);
+    T mapFromProto(HubEventProto proto);
 }
