@@ -4,8 +4,8 @@ import collector.mapper.proto.sensor.mapper.SensorProtoMapper;
 import collector.model.sensor.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import com.google.protobuf.Timestamp;
+import ru.yandex.practicum.grpc.telemetry.collector.SensorEventProto;
 
 import java.time.Instant;
 

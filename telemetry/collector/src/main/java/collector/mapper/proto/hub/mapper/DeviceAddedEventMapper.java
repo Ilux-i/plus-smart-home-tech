@@ -3,9 +3,9 @@ package collector.mapper.proto.hub.mapper;
 import collector.model.hub.DeviceAddedEvent;
 import collector.model.state.DeviceType;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.grpc.telemetry.event.DeviceAddedEventProto;
-import ru.yandex.practicum.grpc.telemetry.event.DeviceTypeProto;
-import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
+import ru.yandex.practicum.grpc.telemetry.collector.DeviceAddedEventProto;
+import ru.yandex.practicum.grpc.telemetry.collector.DeviceTypeProto;
+import ru.yandex.practicum.grpc.telemetry.collector.HubEventProto;
 
 @Component("protoDeviceAddedEventMapper")
 public class DeviceAddedEventMapper implements HubProtoMapper<DeviceAddedEvent> {

@@ -6,8 +6,8 @@ import collector.model.hub.BaseDeviceEvent;
 import collector.model.sensor.BaseSensorEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
-import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
+import ru.yandex.practicum.grpc.telemetry.collector.HubEventProto;
+import ru.yandex.practicum.grpc.telemetry.collector.SensorEventProto;
 
 @Component
 @RequiredArgsConstructor

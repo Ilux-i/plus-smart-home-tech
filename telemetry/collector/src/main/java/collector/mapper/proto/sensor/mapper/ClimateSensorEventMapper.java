@@ -2,8 +2,8 @@ package collector.mapper.proto.sensor.mapper;
 
 import collector.model.sensor.ClimateSensorEvent;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.grpc.telemetry.event.ClimateSensorProto;
-import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
+import ru.yandex.practicum.grpc.telemetry.collector.ClimateSensorProto;
+import ru.yandex.practicum.grpc.telemetry.collector.SensorEventProto;
 
 @Component("protoClimateSensorEventMapper")
 public class ClimateSensorEventMapper implements SensorProtoMapper<ClimateSensorEvent> {

@@ -1,5 +1,14 @@
 grpc:
+  server:
+    port: 59091
   client:
     collector:
       address: 'static://localhost:9090'
       negotiationType: PLAINTEXT
+
+server:
+  port: 8080
+
+spring:
+  kafka:
+    bootstrap-servers: 'localhost:9092'

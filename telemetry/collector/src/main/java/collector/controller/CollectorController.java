@@ -1,6 +1,6 @@
 package collector.controller;
 
-import collector.service.CollectorService;
+import collector.service.SendAvroService;
 import collector.model.sensor.BaseSensorEvent;
 import collector.model.hub.BaseDeviceEvent;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CollectorController {
 
-    private final CollectorService service;
+    private final SendAvroService service;
 
     // Эндпоинт для обработки событий от датчиков
     @PostMapping("/sensors")

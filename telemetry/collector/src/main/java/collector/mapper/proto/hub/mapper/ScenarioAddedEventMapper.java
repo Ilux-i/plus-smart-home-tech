@@ -7,7 +7,7 @@ import collector.model.state.ActionType;
 import collector.model.state.ConditionOperation;
 import collector.model.state.ConditionType;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.grpc.telemetry.event.*;
+import ru.yandex.practicum.grpc.telemetry.collector.*;
 
 import java.util.stream.Collectors;
 

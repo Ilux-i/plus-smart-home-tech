@@ -4,7 +4,7 @@ import collector.mapper.proto.hub.mapper.HubProtoMapper;
 import collector.model.hub.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
+import ru.yandex.practicum.grpc.telemetry.collector.HubEventProto;
 import com.google.protobuf.Timestamp;
 import java.time.Instant;
 

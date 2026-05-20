@@ -2,8 +2,8 @@ package collector.mapper.proto.hub.mapper;
 
 import collector.model.hub.ScenarioRemovedEvent;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
-import ru.yandex.practicum.grpc.telemetry.event.ScenarioRemovedEventProto;
+import ru.yandex.practicum.grpc.telemetry.collector.HubEventProto;
+import ru.yandex.practicum.grpc.telemetry.collector.ScenarioRemovedEventProto;
 
 @Component("protoScenarioRemovedEventMapper")
 public class ScenarioRemovedEventMapper implements HubProtoMapper<ScenarioRemovedEvent> {

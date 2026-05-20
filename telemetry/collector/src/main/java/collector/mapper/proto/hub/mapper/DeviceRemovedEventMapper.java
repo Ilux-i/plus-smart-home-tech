@@ -2,8 +2,8 @@ package collector.mapper.proto.hub.mapper;
 
 import collector.model.hub.DeviceRemovedEvent;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.grpc.telemetry.event.DeviceRemovedEventProto;
-import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
+import ru.yandex.practicum.grpc.telemetry.collector.DeviceRemovedEventProto;
+import ru.yandex.practicum.grpc.telemetry.collector.HubEventProto;
 
 @Component("protoDeviceRemovedEventMapper")
 public class DeviceRemovedEventMapper implements HubProtoMapper<DeviceRemovedEvent> {

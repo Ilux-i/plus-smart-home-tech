@@ -1,7 +1,7 @@
 package collector.service;
 
+import collector.kafka.AvroKafkaClient;
 import collector.mapper.avro.AvroMapper;
-import collector.kafka.KafkaClient;
 import collector.model.sensor.BaseSensorEvent;
 import collector.model.hub.BaseDeviceEvent;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +24,12 @@ import java.io.IOException;
 @Log4j2
 @Service
 @RequiredArgsConstructor
-public class CollectorService {
+public class SendAvroService {
 
     private static final String SENSOR_TOPIC = "telemetry.sensors.v1";
     private static final String HUB_TOPIC = "telemetry.hubs.v1";
 
-
-    private final KafkaClient kafkaClient;
+    private final AvroKafkaClient avrokafkaClient;
     private final AvroMapper avroMapper;
 
     // Работа с топиком датчиков
@@ -38,7 +37,7 @@ public class CollectorService {
     public void sendSensorEvent(BaseSensorEvent event) {
         SensorEventAvro avroRecord = avroMapper.mapSensorEventToAvro(event); // Маппинг в avro
 
-        KafkaTemplate<String, byte[]> producer = kafkaClient.getProducer(); // Получение producer
+        KafkaTemplate<String, byte[]> producer = avrokafkaClient.getProducer(); // Получение producer
 
         try {
             byte[] record = serializeSensorAvro(avroRecord); // Формирование записи
@@ -60,7 +59,7 @@ public class CollectorService {
     public void sendHubEvent(BaseDeviceEvent event) {
         HubEventAvro avroRecord = avroMapper.mapHubEventToAvro(event); // Маппинг в avro
 
-        KafkaTemplate<String, byte[]> producer = kafkaClient.getProducer(); // Получение producer
+        KafkaTemplate<String, byte[]> producer = avrokafkaClient.getProducer(); // Получение producer
 
         try {
             byte[] record = serializeHubAvro(avroRecord); // Формирование записи

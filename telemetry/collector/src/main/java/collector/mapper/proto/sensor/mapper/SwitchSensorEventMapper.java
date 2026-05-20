@@ -2,8 +2,8 @@ package collector.mapper.proto.sensor.mapper;
 
 import collector.model.sensor.SwitchSensorEvent;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
-import ru.yandex.practicum.grpc.telemetry.event.SwitchSensorProto;
+import ru.yandex.practicum.grpc.telemetry.collector.SensorEventProto;
+import ru.yandex.practicum.grpc.telemetry.collector.SwitchSensorProto;
 
 @Component("protoSwitchSensorEventMapper")
 public class SwitchSensorEventMapper implements SensorProtoMapper<SwitchSensorEvent> {

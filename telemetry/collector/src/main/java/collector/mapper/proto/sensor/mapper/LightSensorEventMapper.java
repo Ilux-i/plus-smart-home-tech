@@ -2,8 +2,8 @@ package collector.mapper.proto.sensor.mapper;
 
 import collector.model.sensor.LightSensorEvent;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.grpc.telemetry.event.LightSensorProto;
-import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
+import ru.yandex.practicum.grpc.telemetry.collector.LightSensorProto;
+import ru.yandex.practicum.grpc.telemetry.collector.SensorEventProto;
 
 @Component("protoLightSensorEventMapper")
 public class LightSensorEventMapper implements SensorProtoMapper<LightSensorEvent> {
