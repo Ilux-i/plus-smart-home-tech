@@ -1,0 +1,24 @@
+grpc:
+  server:
+    port: 59095
+  client:
+    collector:
+      address: 'static://localhost:9099'
+      negotiationType: PLAINTEXT
+
+server:
+  port: 8090
+
+logging:
+  level:
+    ru.yandex.practicum: DEBUG
+
+spring:
+  kafka:
+    bootstrap-servers: 'localhost:9092'
+    consumer:
+      enable-auto-commit: false
+      group-id: avro-consumer-group
+  topics:
+    sensor: 'telemetry.sensors.v1'
+    snapshot: 'telemetry.snapshots.v1'
