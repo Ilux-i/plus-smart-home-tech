@@ -4,6 +4,7 @@ import collector.kafka.KafkaClient;
 import collector.kafka.ProtoKafkaClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.grpc.telemetry.collector.HubEventProto;
@@ -16,15 +17,18 @@ public class EventService {
 
     private final ProtoKafkaClient protoKafkaClient;
 
-    private static final String SENSOR_TOPIC = "telemetry.sensors.v1";
-    private static final String HUB_TOPIC = "telemetry.hubs.v1";
+    @Value("${kafka.topics.sensor:telemetry.sensors.v1}")
+    private String sensorTopic;
+
+    @Value("${kafka.topics.hub:telemetry.hubs.v1}")
+    private String hubTopic;
 
     public void sendSensorEvent(SensorEventProto event) {
         KafkaTemplate<String, byte[]> producer = protoKafkaClient.getProducer();
         try {
             byte[] data = event.toByteArray(); // Proto сериализация
-            producer.send(SENSOR_TOPIC, event.getHubId(), data);
-            log.info("Sent sensor event to topic {}: {}", SENSOR_TOPIC, event);
+            producer.send(sensorTopic, event.getHubId(), data);
+            log.info("Sent sensor event to topic {}: {}", sensorTopic, event);
         } catch (Exception e) {
             log.error("Failed to send sensor event to Kafka", e);
         }
@@ -34,8 +38,8 @@ public class EventService {
         KafkaTemplate<String, byte[]> producer = protoKafkaClient.getProducer();
         try {
             byte[] data = event.toByteArray(); // Proto сериализация
-            producer.send(HUB_TOPIC, event.getHubId(), data);
-            log.info("Sent hub event to topic {}: {}", HUB_TOPIC, event);
+            producer.send(hubTopic, event.getHubId(), data);
+            log.info("Sent hub event to topic {}: {}", hubTopic, event);
         } catch (Exception e) {
             log.error("Failed to send hub event to Kafka", e);
         }

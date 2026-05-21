@@ -12,6 +12,7 @@ import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.Producer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
@@ -26,8 +27,11 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class SendAvroService {
 
-    private static final String SENSOR_TOPIC = "telemetry.sensors.v1";
-    private static final String HUB_TOPIC = "telemetry.hubs.v1";
+    @Value("${kafka.topics.sensor:telemetry.sensors.v1}")
+    private String sensorTopic;
+
+    @Value("${kafka.topics.hub:telemetry.hubs.v1}")
+    private String hubTopic;
 
     private final AvroKafkaClient avrokafkaClient;
     private final AvroMapper avroMapper;
@@ -43,7 +47,7 @@ public class SendAvroService {
             byte[] record = serializeSensorAvro(avroRecord); // Формирование записи
 
             producer.send( // Отправка записи
-                    SENSOR_TOPIC,
+                    sensorTopic,
                     event.getHubId(),
                     record
             );
@@ -65,7 +69,7 @@ public class SendAvroService {
             byte[] record = serializeHubAvro(avroRecord); // Формирование записи
 
             producer.send( // Отправка записи
-                    HUB_TOPIC,
+                    hubTopic,
                     event.getHubId(),
                     record
             );
