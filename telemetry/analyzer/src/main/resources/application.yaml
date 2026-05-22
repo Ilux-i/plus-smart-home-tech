@@ -3,7 +3,7 @@ grpc:
     port: 59088
   client:
     hub-router:
-      address: 'static://localhost:59091'
+      address: 'static://localhost:59090'
       enableKeepAlive: true
       keepAliveWithoutCalls: true
       negotiationType: plaintext
