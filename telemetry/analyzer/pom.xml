@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>aggregator</artifactId>
+    <artifactId>analyzer</artifactId>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -18,51 +18,50 @@
     </properties>
 
     <dependencies>
-<!--    Spring Boot Starter    -->
+        <!--    Spring Boot Starter    -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
-<!--    Avro schema    -->
+        <!--    Spring Boot Starter JPA    -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!--    Driver Postgres    -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+
+        <!--    Avro schema    -->
         <dependency>
             <groupId>ru.yandex.practicum</groupId>
             <artifactId>avro-schemas</artifactId>
         </dependency>
 
-<!--    Proto schema    -->
-        <dependency>
-            <groupId>ru.yandex.practicum</groupId>
-            <artifactId>proto-schemas</artifactId>
-        </dependency>
-
-<!--    gRPC Server    -->
+        <!--    gRPC Server    -->
         <dependency>
             <groupId>net.devh</groupId>
             <artifactId>grpc-server-spring-boot-starter</artifactId>
         </dependency>
 
-<!--    gRPC Client    -->
+        <!--    gRPC Client    -->
         <dependency>
             <groupId>net.devh</groupId>
             <artifactId>grpc-client-spring-boot-starter</artifactId>
         </dependency>
 
-<!--    Proto    -->
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-netty-shaded</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-        </dependency>
-
-<!--    Kafka    -->
+        <!--    Kafka    -->
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ru.yandex.practicum</groupId>
+            <artifactId>proto-schemas</artifactId>
         </dependency>
     </dependencies>
 
@@ -72,7 +71,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>ru.yandex.practicum.Aggregator</mainClass>
+                    <mainClass>ru.yandex.practicum.Analyzer</mainClass>
                 </configuration>
                 <executions>
                     <execution>

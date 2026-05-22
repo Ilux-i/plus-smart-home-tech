@@ -18,7 +18,7 @@ spring:
     bootstrap-servers: 'localhost:9092'
     consumer:
       enable-auto-commit: false
-      group-id: avro-consumer-group
+      group-id: aggregator-group
   topics:
     sensor: 'telemetry.sensors.v1'
     snapshot: 'telemetry.snapshots.v1'
