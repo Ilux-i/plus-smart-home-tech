@@ -11,7 +11,6 @@ import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -43,9 +42,12 @@ public class AvroKafkaClient implements KafkaClient {
         return producer;
     }
 
-
     public Consumer<String, byte[]> getConsumer() {
-        return new KafkaConsumer<>(createConsumerProps());
+        if (consumer == null) {
+            consumer = new KafkaConsumer<>(createConsumerProps());
+            log.info("Kafka consumer инициализирован с group.id: {}", groupId);
+        }
+        return consumer;
     }
 
     @PreDestroy
@@ -58,6 +60,14 @@ public class AvroKafkaClient implements KafkaClient {
                 log.error("Ошибка очистки producer: {}", e.getMessage(), e);
             }
         }
+        if (consumer != null) {
+            try {
+                consumer.close();
+                log.info("Kafka consumer успешно закрыт");
+            } catch (Exception e) {
+                log.error("Ошибка закрытия consumer: {}", e.getMessage(), e);
+            }
+        }
     }
 
     // Producer конфигурация
@@ -66,6 +76,8 @@ public class AvroKafkaClient implements KafkaClient {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
+        props.put(ProducerConfig.ACKS_CONFIG, "all");
+        props.put(ProducerConfig.RETRIES_CONFIG, 3);
         return props;
     }
 
@@ -87,7 +99,7 @@ public class AvroKafkaClient implements KafkaClient {
         props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 10000);
         props.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, 3000);
         props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 300000);
-        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 10);
+        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 100);
 
         // Таймауты для быстрого восстановления
         props.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, 20000);
