@@ -24,6 +24,9 @@ spring:
     topics:
       hub: telemetry.hubs.v1
       snapshot: telemetry.snapshots.v1
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
   datasource:
     url: jdbc:postgresql://localhost:5432/analyzer
     username: postgres
