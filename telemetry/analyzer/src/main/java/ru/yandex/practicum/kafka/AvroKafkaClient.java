@@ -25,7 +25,7 @@ public class AvroKafkaClient implements KafkaClient {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Value("${spring.kafka.consumer.group-id:aggregator-group}")
+    @Value("${spring.kafka.consumer.group-id:analyzer-group}")
     private String groupId;
 
     private KafkaTemplate<String, byte[]> producer;
@@ -37,17 +37,12 @@ public class AvroKafkaClient implements KafkaClient {
             producer = new KafkaTemplate<>(
                     new DefaultKafkaProducerFactory<>(createProducerProps())
             );
-            log.info("Kafka producer инициализирован");
         }
         return producer;
     }
 
     public Consumer<String, byte[]> getConsumer() {
-        if (consumer == null) {
-            consumer = new KafkaConsumer<>(createConsumerProps());
-            log.info("Kafka consumer инициализирован с group.id: {}", groupId);
-        }
-        return consumer;
+        return new KafkaConsumer<>(createConsumerProps());
     }
 
     @PreDestroy
@@ -70,7 +65,6 @@ public class AvroKafkaClient implements KafkaClient {
         }
     }
 
-    // Producer конфигурация
     private Map<String, Object> createProducerProps() {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -81,36 +75,18 @@ public class AvroKafkaClient implements KafkaClient {
         return props;
     }
 
-    // Consumer конфигурация
     private Map<String, Object> createConsumerProps() {
         Map<String, Object> props = new HashMap<>();
 
-        // Основные настройки
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class);
 
-        // Настройки смещений
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
-
-        // Оптимизация для быстрого подключения
-        props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 10000);
-        props.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, 3000);
-        props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 300000);
-        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 100);
-
-        // Таймауты для быстрого восстановления
-        props.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, 20000);
-        props.put(ConsumerConfig.RECONNECT_BACKOFF_MS_CONFIG, 50);
-        props.put(ConsumerConfig.RECONNECT_BACKOFF_MAX_MS_CONFIG, 1000);
-
-        // Производительность
-        props.put(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, 1);
-        props.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, 500);
-        props.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, 1048576);
-
+        props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 300_000);
+        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1);
         return props;
     }
 }
