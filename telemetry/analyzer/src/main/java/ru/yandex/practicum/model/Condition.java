@@ -2,7 +2,7 @@ package ru.yandex.practicum.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.yandex.practicum.grpc.telemetry.collector.ConditionTypeProto;
+import ru.yandex.practicum.grpc.telemetry.collector.ConditionOperationProto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class Condition {
     private String type;
 
     @Column(name = "operation", nullable = false)
-    private ConditionTypeProto operation;
+    private ConditionOperationProto operation;
 
     @Column(name = "value")
     private Integer value;

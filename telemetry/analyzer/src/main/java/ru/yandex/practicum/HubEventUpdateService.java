@@ -3,7 +3,7 @@ package ru.yandex.practicum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.grpc.telemetry.collector.ConditionTypeProto;
+import ru.yandex.practicum.grpc.telemetry.collector.ConditionOperationProto;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.model.*;
 import ru.yandex.practicum.model.ScenarioCondition.ScenarioConditionId;
@@ -79,7 +79,7 @@ public class HubEventUpdateService {
             Condition condition = conditionRep.save(
                     Condition.builder()
                             .type(condAvro.getType().name())
-                            .operation(ConditionTypeProto.valueOf(condAvro.getOperation().name()))
+                            .operation(ConditionOperationProto.valueOf(condAvro.getOperation().name()))
                             .value(getValue(condAvro.getValue()))
                             .build()
             );
