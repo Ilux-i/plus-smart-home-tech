@@ -3,11 +3,15 @@ package ru.yandex.practicum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.grpc.telemetry.collector.ConditionTypeProto;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.model.*;
 import ru.yandex.practicum.model.ScenarioCondition.ScenarioConditionId;
 import ru.yandex.practicum.repository.*;
 import ru.yandex.practicum.model.ScenarioAction.ScenarioActionId;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Slf4j
@@ -70,18 +74,19 @@ public class HubEventUpdateService {
                 );
 
         // Сохраняем условия
+        List<ScenarioCondition> conditionsToSave = new ArrayList<>();
         for (ScenarioConditionAvro condAvro : added.getConditions()) {
-            Condition condition = conditionRep
-                    .save(Condition.builder()
+            Condition condition = conditionRep.save(
+                    Condition.builder()
                             .type(condAvro.getType().name())
-                            .operation(condAvro.getOperation().name())
+                            .operation(ConditionTypeProto.valueOf(condAvro.getOperation().name()))
                             .value(getValue(condAvro.getValue()))
                             .build()
-                    );
+            );
 
             Sensor sensor = getSensor(condAvro.getSensorId());
 
-            scenarioConditionRep.save(
+            conditionsToSave.add(
                     ScenarioCondition.builder()
                             .id(ScenarioConditionId.builder()
                                     .scenarioId(scenario.getId())
@@ -94,8 +99,10 @@ public class HubEventUpdateService {
                             .build()
             );
         }
+        scenarioConditionRep.saveAll(conditionsToSave);
 
         // Сохраняем действия
+        List<ScenarioAction> actionsToSave = new ArrayList<>();
         for (DeviceActionAvro actionAvro : added.getActions()) {
             Action action = actionRep.save(
                     Action.builder()
@@ -107,7 +114,7 @@ public class HubEventUpdateService {
 
             Sensor sensor = getSensor(actionAvro.getSensorId());
 
-            scenarioActionRep.save(
+            actionsToSave.add(
                     ScenarioAction.builder()
                             .id(ScenarioActionId.builder()
                                     .scenarioId(scenario.getId())
@@ -120,6 +127,7 @@ public class HubEventUpdateService {
                             .build()
             );
         }
+        scenarioActionRep.saveAll(actionsToSave);  // ← один запрос
         log.info("Сценарий добавлен: {}", added.getName());
     }
 

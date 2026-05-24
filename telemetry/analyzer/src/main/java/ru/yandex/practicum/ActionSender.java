@@ -53,12 +53,10 @@ public class ActionSender {
     }
 
     private ActionTypeProto mapActionType(String type) {
-        return switch (type) {
-            case "ACTIVATE" -> ActionTypeProto.ACTIVATE;
-            case "DEACTIVATE" -> ActionTypeProto.DEACTIVATE;
-            case "INVERSE" -> ActionTypeProto.INVERSE;
-            case "SET_VALUE" -> ActionTypeProto.SET_VALUE;
-            default -> throw new IllegalArgumentException("Тип действия не найден: " + type);
-        };
+        try {
+            return ActionTypeProto.valueOf(type);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Тип действия не найден: " + type);
+        }
     }
 }
