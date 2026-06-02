@@ -1,17 +1,13 @@
-grpc:
-  server:
-    port: 59091
-  client:
-    collector:
-      address: 'static://localhost:9090'
-      negotiationType: PLAINTEXT
-
-server:
-  port: 8080
+cloud:
+  config:
+    fail-fast: true
+    retry:
+      useRandomPolicy: true
+      max-interval: 6000
 
 spring:
-  kafka:
-    bootstrap-servers: 'localhost:9092'
-  topics:
-    sensor: 'telemetry.sensors.v1'
-    hub: 'telemetry.hub.v1'
+  application:
+    name: collector
+
+  config:
+    import: configserver:http://localhost:8888
