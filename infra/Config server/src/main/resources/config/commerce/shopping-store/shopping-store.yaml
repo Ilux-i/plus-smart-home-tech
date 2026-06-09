@@ -1,0 +1,14 @@
+grpc:
+  server:
+    port: 59081
+  client:
+    shopping-store:
+      address: 'static://localhost:59081'
+      negotiationType: PLAINTEXT
+
+server:
+  port: 0
+
+logging:
+  level:
+    ru.yandex.practicum: DEBUG

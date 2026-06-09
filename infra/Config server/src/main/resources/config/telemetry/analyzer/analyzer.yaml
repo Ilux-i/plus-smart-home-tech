@@ -9,7 +9,7 @@ grpc:
       negotiationType: plaintext
 
 server:
-  port: 8090
+  port: 0
 
 logging:
   level:

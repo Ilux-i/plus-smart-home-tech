@@ -7,7 +7,7 @@ grpc:
       negotiationType: PLAINTEXT
 
 server:
-  port: 8080
+  port: 0
 
 logging:
   level:
