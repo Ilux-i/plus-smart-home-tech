@@ -6,9 +6,10 @@ import ru.yandex.practicum.dto.cart.ChangeProductQuantityRequest;
 import ru.yandex.practicum.dto.cart.ShoppingCartDto;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-@FeignClient(name = "shopping-cart")
-@RequestMapping("api/v1/shopping-cart")
+@FeignClient(name = "shopping-cart", path = "/api/v1/shopping-cart")
 public interface CartClient {
 
     @GetMapping
@@ -19,7 +20,7 @@ public interface CartClient {
     @PutMapping
     ShoppingCartDto addProductFromCart(
             @RequestParam String username,
-            @RequestBody List<Integer> productIds
+            @RequestBody Map<UUID, Long> productIds
             );
 
     @DeleteMapping
@@ -28,8 +29,9 @@ public interface CartClient {
     );
 
     @PostMapping("/remove")
-    List<Integer> clearProductFromCart(
-            @RequestParam String username
+    ShoppingCartDto clearProductFromCart(
+            @RequestParam String username,
+            @RequestBody List<UUID> productIds
     );
 
     @PostMapping("/change-quantity")

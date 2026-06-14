@@ -8,8 +8,7 @@ import ru.yandex.practicum.dto.warehouse.AddressDto;
 import ru.yandex.practicum.dto.warehouse.BookedProductsDto;
 import ru.yandex.practicum.dto.warehouse.NewProductInWarehouseRequest;
 
-@FeignClient(name = "warehouse")
-@RequestMapping("api/v1/warehouse")
+@FeignClient(name = "warehouse", path = "/api/v1/warehouse")
 public interface WarehouseClient {
     @PutMapping
     void addNewProduct(@RequestBody NewProductInWarehouseRequest dto);
