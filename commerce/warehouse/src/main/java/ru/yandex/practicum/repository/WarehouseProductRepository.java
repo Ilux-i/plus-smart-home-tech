@@ -7,9 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.dto.warehouse.entity.WarehouseProduct;
 
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 public interface WarehouseProductRepository extends JpaRepository<WarehouseProduct, UUID> {
@@ -26,5 +24,5 @@ public interface WarehouseProductRepository extends JpaRepository<WarehouseProdu
     @Query("UPDATE WarehouseProduct w SET w.quantity = w.quantity - :quantity WHERE w.productId = :productId")
     void decreaseQuantity(@Param("productId") UUID productId, @Param("quantity") Long quantity);
 
-    Set<WarehouseProduct> findByProductIdIn(Set<UUID> productIds);
+    List<WarehouseProduct> findByProductIdIn(Set<UUID> productIds);
 }
