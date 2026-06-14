@@ -11,7 +11,6 @@ import ru.yandex.practicum.state.ProductCategory;
 import ru.yandex.practicum.state.ProductState;
 import ru.yandex.practicum.state.QuantityState;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -24,32 +23,32 @@ import java.util.UUID;
 public class Product {
 
     @Id
-    @Column(name = "product_id", columnDefinition = "UUID")
+    @Column(name = "product_id")
     private UUID productId;
 
-    @Column(name = "product_name", length = 255, nullable = false)
+    @Column(name = "product_name", nullable = false)
     private String productName;
 
-    @Column(name = "description", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "image_src", length = 512)
+    @Column(name = "image_src")
     private String imageSrc;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "quantity_state", length = 10, nullable = false)
+    @Column(name = "quantity_state", nullable = false)
     private QuantityState quantityState;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "product_state", length = 10, nullable = false)
+    @Column(name = "product_state", nullable = false)
     private ProductState productState;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "product_category", length = 20, nullable = false)
+    @Column(name = "product_category", nullable = false)
     private ProductCategory productCategory;
 
-    @Column(name = "price", precision = 12, scale = 2, nullable = false)
-    private BigDecimal price;
+    @Column(name = "price", nullable = false)
+    private Double price;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

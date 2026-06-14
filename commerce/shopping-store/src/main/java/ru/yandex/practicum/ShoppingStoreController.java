@@ -5,7 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.dto.store.PageProductDto;
 import ru.yandex.practicum.dto.store.ProductDto;
 import ru.yandex.practicum.dto.store.SetProductQuantityStateRequest;
-import ru.yandex.practicum.store.service.ShoppingStoreService;
+import ru.yandex.practicum.service.ShoppingStoreService;
+import ru.yandex.practicum.state.QuantityState;
 
 import java.util.List;
 import java.util.UUID;
@@ -63,8 +64,14 @@ public class ShoppingStoreController {
      * Установка статуса количества товара
      */
     @PostMapping("/quantityState")
-    public boolean setProductQuantityState(@RequestBody SetProductQuantityStateRequest request) {
-        return shoppingStoreService.setProductQuantityState(request);
+    public boolean setProductQuantityState(
+            @RequestParam UUID productId,
+            @RequestParam QuantityState quantityState
+    ) {
+        return shoppingStoreService.setProductQuantityState(SetProductQuantityStateRequest.builder()
+                .productId(productId)
+                .quantityState(quantityState)
+                .build());
     }
 
     /**

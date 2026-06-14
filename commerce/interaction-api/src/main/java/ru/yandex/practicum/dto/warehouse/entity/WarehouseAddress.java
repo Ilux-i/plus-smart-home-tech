@@ -20,7 +20,7 @@ public class WarehouseAddress {
 
     @Id
     @Column(name = "id")
-    private Long id;  // всегда будет 1 (синглтон)
+    private Long id;
 
     @Column(name = "country", length = 100)
     private String country;

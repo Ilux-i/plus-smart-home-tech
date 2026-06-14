@@ -27,7 +27,7 @@ public class WarehouseProduct {
     private UUID productId;
 
     @Column(name = "quantity", nullable = false)
-    private Long quantity = 0L;
+    private Long quantity;
 
     @Column(name = "fragile", nullable = false)
     private boolean fragile;

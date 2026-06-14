@@ -96,6 +96,7 @@ public class WarehouseService {
 
         log.info("Количество товара перед обновлением: {}", product.getQuantity());
         product.setQuantity(product.getQuantity() + request.getQuantity()); // Добавляем продукт к имеющемуся количеству
+        product.setUpdatedAt(Instant.now());
         WarehouseProduct updatedProduct = warehouseProductRepository.save(product); // Сохранение изменений
         log.info("Количество товара обновлено: {}", updatedProduct.getQuantity());
 
