@@ -1,6 +1,6 @@
 grpc:
   server:
-    port: 59091
+    port: 59090
   client:
     collector:
       address: 'static://localhost:9090'

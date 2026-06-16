@@ -1,6 +1,6 @@
 grpc:
   server:
-    port: 59088
+    port: 59091
   client:
     hub-router:
       address: 'static://localhost:59090'
