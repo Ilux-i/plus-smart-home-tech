@@ -26,11 +26,11 @@ public class ShoppingStoreController {
             @RequestParam String category,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "20") Integer size,
-            @RequestParam(required = false) List<String> sort
+            @RequestParam(required = false) String sort
     ) {
         // Маппинг русских значений категорий из спецификации в английские enum
         if (sort == null || sort.isEmpty()) {
-            sort = List.of("productName,asc");
+            sort = "productName,asc";
         }
 
         return shoppingStoreService.getProducts(category, page, size, sort);

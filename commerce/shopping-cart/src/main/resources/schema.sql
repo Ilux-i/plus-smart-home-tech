@@ -1,6 +1,4 @@
-CREATE SCHEMA IF NOT EXISTS cart;
-
-CREATE TABLE IF NOT EXISTS cart.shopping_cart
+CREATE TABLE IF NOT EXISTS shopping_cart
 (
     shopping_cart_id UUID PRIMARY KEY,
     username         VARCHAR(100) NOT NULL,
@@ -9,7 +7,7 @@ CREATE TABLE IF NOT EXISTS cart.shopping_cart
     updated_at       TIMESTAMP    NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS cart.cart_item
+CREATE TABLE IF NOT EXISTS cart_item
 (
     cart_item_id     BIGSERIAL PRIMARY KEY,
     shopping_cart_id UUID   NOT NULL,

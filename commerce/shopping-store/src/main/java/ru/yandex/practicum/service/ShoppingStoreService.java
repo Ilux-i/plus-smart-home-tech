@@ -35,8 +35,7 @@ public class ShoppingStoreService {
     private final ProductRepository productRepository;
     private final WarehouseClient warehouseClient;
 
-    public PageProductDto getProducts(String category, Integer page, Integer size, List<String> sort) {
-        // TODO: реализовать получение страницы товаров
+    public PageProductDto getProducts(String category, Integer page, Integer size, String sort) {
         // Преобразуем строку категории в enum
         ProductCategory productCategory;
         try {
@@ -169,40 +168,24 @@ public class ShoppingStoreService {
         return ProductMapper.toDto(product);
     }
 
-    private Sort buildSort(List<String> sortParams) {
-        // TODO: построить Sort из параметров
-        if (sortParams == null || sortParams.isEmpty()) {
-            // Сортировка по умолчанию: по имени товара по возрастанию
+    private Sort buildSort(String sortParam) {
+        if (sortParam == null || sortParam.trim().isEmpty()) {
             return Sort.by(Sort.Direction.ASC, "productName");
         }
 
-        List<Sort.Order> orders = new ArrayList<>();
+        String[] parts = sortParam.split(",");
+        String property = parts[0].trim();
+        Sort.Direction direction = Sort.Direction.ASC;
 
-        for (String sortParam : sortParams) {
-            if (sortParam == null || sortParam.trim().isEmpty()) {
-                continue;
+        if (parts.length > 1) {
+            String directionStr = parts[1].trim().toLowerCase();
+            if ("desc".equals(directionStr)) {
+                direction = Sort.Direction.DESC;
+            } else if (!"asc".equals(directionStr)) {
+                log.warn("Invalid sort direction: {}, using ASC", directionStr);
             }
-
-            String[] parts = sortParam.split(",");
-            String property = parts[0].trim();
-            Sort.Direction direction = Sort.Direction.ASC; // по умолчанию ASC
-
-            if (parts.length > 1) {
-                String directionStr = parts[1].trim().toLowerCase();
-                if ("desc".equals(directionStr)) {
-                    direction = Sort.Direction.DESC;
-                } else if (!"asc".equals(directionStr)) {
-                    log.warn("Invalid sort direction: {}, using ASC", directionStr);
-                }
-            }
-
-            orders.add(new Sort.Order(direction, property));
         }
 
-        if (orders.isEmpty()) {
-            return Sort.by(Sort.Direction.ASC, "productName");
-        }
-
-        return Sort.by(orders);
+        return Sort.by(direction, property);
     }
 }

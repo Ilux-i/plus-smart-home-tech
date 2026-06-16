@@ -16,13 +16,9 @@ logging:
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
-#      ddl-auto: create-drop
-    properties:
-      hibernate:
-        default_schema: cart
+      ddl-auto: create-drop
   datasource:
-    url: jdbc:postgresql://localhost:5432/commerce
+    url: jdbc:postgresql://localhost:5432/cart
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver

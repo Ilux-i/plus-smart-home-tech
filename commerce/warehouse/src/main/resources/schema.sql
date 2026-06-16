@@ -1,6 +1,4 @@
-CREATE SCHEMA IF NOT EXISTS warehouse;
-
-CREATE TABLE IF NOT EXISTS warehouse.warehouse_product
+CREATE TABLE IF NOT EXISTS warehouse_product
 (
     product_id UUID PRIMARY KEY,
     quantity   BIGINT           NOT NULL,
@@ -13,7 +11,7 @@ CREATE TABLE IF NOT EXISTS warehouse.warehouse_product
     updated_at TIMESTAMP        NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS warehouse.warehouse_address
+CREATE TABLE IF NOT EXISTS warehouse_address
 (
     id      BIGSERIAL PRIMARY KEY,
     country VARCHAR(100),
