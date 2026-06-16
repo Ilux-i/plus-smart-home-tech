@@ -8,22 +8,17 @@ import ru.yandex.practicum.dto.cart.ShoppingCartDto;
 import ru.yandex.practicum.dto.warehouse.*;
 import ru.yandex.practicum.dto.warehouse.entity.WarehouseProduct;
 import ru.yandex.practicum.exception.ProductInShoppingCartLowQuantityInWarehouse;
-import ru.yandex.practicum.exception.ProductNotFoundException;
 import ru.yandex.practicum.exception.SpecifiedProductAlreadyInWarehouseException;
 import ru.yandex.practicum.repository.WarehouseAddressRepository;
 import ru.yandex.practicum.repository.WarehouseProductRepository;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class WarehouseService {
 
     private final WarehouseProductRepository warehouseProductRepository;
@@ -31,7 +26,6 @@ public class WarehouseService {
 
     private static final String ADDRESS = "address";
 
-    @Transactional
     public void newProductInWarehouse(NewProductInWarehouseRequest request) {
         // TODO: реализовать добавление нового товара на склад
 
@@ -54,7 +48,7 @@ public class WarehouseService {
                 .build();
         log.info("Продукт склада собран");
         WarehouseProduct savedProduct = warehouseProductRepository.save(product);
-        log.info("Продукт склада сохранён");
+        log.info("Продукт склада сохранён id:{}", savedProduct.getProductId());
     }
 
     public BookedProductsDto checkProductQuantityEnoughForShoppingCart(ShoppingCartDto shoppingCart) {
@@ -82,23 +76,21 @@ public class WarehouseService {
         return reservedData;
     }
 
-    @Transactional
     public void addProductToWarehouse(AddProductToWarehouseRequest request) {
         // TODO: реализовать прием товара на склад
 
-        if (warehouseProductRepository.existsByProductId(request.getProductId())) { // Проверка наличия товара
+        Optional<WarehouseProduct> found = warehouseProductRepository.findByProductId(request.getProductId());;
+        if (found.isEmpty()) {
             log.debug("Продукта c id({}) нет на складе и его нельзя добавить", request.getProductId());
             throw new SpecifiedProductAlreadyInWarehouseException("Продукт нет на складе, нельзя добавить не зарегистрированный товар");
+        } else {
+            WarehouseProduct product = found.get();
+            log.info("Количество товара перед обновлением: {}", product.getQuantity());
+            product.setQuantity(product.getQuantity() + request.getQuantity()); // Добавляем продукт к имеющемуся количеству
+            product.setUpdatedAt(Instant.now());
+            WarehouseProduct updatedProduct = warehouseProductRepository.save(product); // Сохранение изменений
+            log.info("Количество товара обновлено: id:{}, quantity:{}", updatedProduct.getProductId(), updatedProduct.getQuantity());
         }
-
-        WarehouseProduct product = warehouseProductRepository.findByProductId(request.getProductId())
-                .orElseThrow(() -> new ProductNotFoundException("Товар не найден на складе"));
-
-        log.info("Количество товара перед обновлением: {}", product.getQuantity());
-        product.setQuantity(product.getQuantity() + request.getQuantity()); // Добавляем продукт к имеющемуся количеству
-        product.setUpdatedAt(Instant.now());
-        WarehouseProduct updatedProduct = warehouseProductRepository.save(product); // Сохранение изменений
-        log.info("Количество товара обновлено: {}", updatedProduct.getQuantity());
 
     }
 

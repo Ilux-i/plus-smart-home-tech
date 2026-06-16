@@ -19,11 +19,11 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "warehouse_product")
+@Table(name = "warehouse_product", schema = "warehouse")
 public class WarehouseProduct {
 
     @Id
-    @Column(name = "product_id")
+    @Column(name = "product_id", columnDefinition = "uuid")
     private UUID productId;
 
     @Column(name = "quantity", nullable = false)
