@@ -28,7 +28,6 @@ public class ShoppingStoreController {
             @RequestParam(defaultValue = "20") Integer size,
             @RequestParam(required = false) String sort
     ) {
-        // Маппинг русских значений категорий из спецификации в английские enum
         if (sort == null || sort.isEmpty()) {
             sort = "productName,asc";
         }

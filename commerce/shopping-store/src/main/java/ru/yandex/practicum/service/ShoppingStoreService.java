@@ -51,10 +51,9 @@ public class ShoppingStoreService {
         // Создаем Pageable объект
         Pageable pageable = PageRequest.of(page, size, sortObj);
 
-        // Получаем страницу товаров (только активные)
-        Page<Product> productPage = productRepository.findByProductCategoryAndProductState(
+        // Получаем страницу товаров
+        Page<Product> productPage = productRepository.findByProductCategory(
                 productCategory,
-                ProductState.ACTIVE,
                 pageable
         );
 
