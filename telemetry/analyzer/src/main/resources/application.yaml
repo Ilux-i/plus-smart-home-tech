@@ -1,50 +1,30 @@
-grpc:
-  server:
-    port: 59088
+eureka:
   client:
-    hub-router:
-      address: 'static://localhost:59090'
-      enableKeepAlive: true
-      keepAliveWithoutCalls: true
-      negotiationType: plaintext
-
-server:
-  port: 8090
-
-logging:
-  level:
-    ru.yandex.practicum: DEBUG
+    enabled: true
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname:localhost}:${eureka.instance.port:8761}/eureka/
+    healthcheck:
+      enabled: true
+  instance:
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+    prefer-ip-address: true
 
 spring:
-  kafka:
-    bootstrap-servers: 'localhost:9092'
-    consumer:
-      enable-auto-commit: false
-      group-id: analyzer-group
-      auto-offset-reset: earliest
-      properties:
-        session.timeout.ms: 10000
-        heartbeat.interval.ms: 3000
-        max.poll.interval.ms: 300000
-        max.poll.records: 100
-        request.timeout.ms: 20000
-        reconnect.backoff.ms: 50
-        reconnect.backoff.max.ms: 1000
-        fetch.min.bytes: 1
-        fetch.max.wait.ms: 500
-        max.partition.fetch.bytes: 1048576
-      producer:
-        properties:
-          acks: all
-          retries: 3
-    topics:
-      hub: telemetry.hubs.v1
-      snapshot: telemetry.snapshots.v1
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-  datasource:
-    url: jdbc:postgresql://localhost:5432/analyzer
-    username: postgres
-    password: password
-    driver-class-name: org.postgresql.Driver
+  application:
+    name: analyzer
+
+  config:
+    import: 'configserver:http://localhost:8888'
+
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        serviceId: config-server
+      fail-fast: true
+      retry:
+        useRandomPolicy: true
+        max-interval: 6000

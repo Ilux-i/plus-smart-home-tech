@@ -1,17 +1,27 @@
-grpc:
-  server:
-    port: 59091
+eureka:
   client:
-    collector:
-      address: 'static://localhost:9090'
-      negotiationType: PLAINTEXT
-
-server:
-  port: 8080
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname:localhost}:${eureka.instance.port:8761}/eureka/
+    healthcheck:
+      enabled: true
+  instance:
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+    prefer-ip-address: true
 
 spring:
-  kafka:
-    bootstrap-servers: 'localhost:9092'
-  topics:
-    sensor: 'telemetry.sensors.v1'
-    hub: 'telemetry.hub.v1'
+  application:
+    name: collector
+
+  config:
+    import: 'configserver:http://localhost:8888'
+
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        serviceId: config-server
+      fail-fast: true
+      retry:
+        useRandomPolicy: true
+        max-interval: 6000
