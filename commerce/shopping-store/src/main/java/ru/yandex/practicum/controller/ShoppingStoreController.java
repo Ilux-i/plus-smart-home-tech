@@ -1,4 +1,4 @@
-package ru.yandex.practicum;
+package ru.yandex.practicum.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +8,6 @@ import ru.yandex.practicum.dto.store.SetProductQuantityStateRequest;
 import ru.yandex.practicum.service.ShoppingStoreService;
 import ru.yandex.practicum.state.QuantityState;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
