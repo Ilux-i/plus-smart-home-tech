@@ -3,7 +3,6 @@ package ru.yandex.practicum.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.dto.cart.ShoppingCartDto;
 import ru.yandex.practicum.dto.warehouse.*;
 import ru.yandex.practicum.dto.warehouse.entity.WarehouseProduct;
@@ -51,6 +50,27 @@ public class WarehouseService {
         log.info("Продукт склада сохранён id:{}", savedProduct.getProductId());
     }
 
+    /**
+     * Передача товаров в доставку.
+     */
+    public void shippedToDelivery(ShippedToDeliveryRequest request) {
+        log.info("Передача товаров в доставку для заказа: {}, доставка: {}",
+                request.getOrderId(), request.getDeliveryId());
+        // TODO: Реализовать передачу товаров в доставку
+        // Обновить статус товаров на "переданы в доставку"
+        // Уменьшить количество зарезервированных товаров
+    }
+
+    /**
+     * Принять возврат товаров на склад.
+     */
+    public void acceptReturn(Map<UUID, Long> products) {
+        log.info("Принятие возврата товаров на склад: {} товаров", products.size());
+        // TODO: Реализовать приём возврата товаров
+        // Увеличить количество товаров на складе
+        // Обновить статус возвращённых товаров
+    }
+
     public BookedProductsDto checkProductQuantityEnoughForShoppingCart(ShoppingCartDto shoppingCart) {
         // TODO: проверить наличие товаров и вернуть зарезервированные данные
         Set<UUID> productIds = shoppingCart.getProducts().keySet();
@@ -92,6 +112,15 @@ public class WarehouseService {
             log.info("Количество товара обновлено: id:{}, quantity:{}", updatedProduct.getProductId(), updatedProduct.getQuantity());
         }
 
+    }
+
+    public BookedProductsDto assemblyProductsForOrder(AssemblyProductsForOrderRequest request) {
+        log.info("Сборка товаров для заказа: {}", request.getOrderId());
+        // TODO: Реализовать сборку товаров для заказа
+        // Проверить наличие всех товаров в достаточном количестве
+        // Зарезервировать товары для заказа
+        // Рассчитать общий вес, объём и признак хрупкости
+        return null;
     }
 
     public AddressDto getWarehouseAddress() {

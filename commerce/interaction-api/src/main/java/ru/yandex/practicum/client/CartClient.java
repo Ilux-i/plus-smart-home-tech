@@ -39,4 +39,8 @@ public interface CartClient {
             @RequestParam String username,
             @RequestBody ChangeProductQuantityRequest dto
     );
+
+    @GetMapping("/{shoppingCartId}")
+    ShoppingCartDto getCartById(@PathVariable UUID shoppingCartId);
+
 }

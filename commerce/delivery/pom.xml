@@ -18,6 +18,12 @@
     </properties>
     <dependencies>
 
+        <!--    DB    -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+
         <!--    DTO    -->
         <dependency>
             <groupId>ru.yandex.practicum</groupId>

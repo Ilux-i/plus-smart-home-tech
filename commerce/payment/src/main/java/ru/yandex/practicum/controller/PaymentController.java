@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.dto.order.OrderDto;
 import ru.yandex.practicum.dto.payment.PaymentDto;
+import ru.yandex.practicum.service.PaymentService;
 
 import java.util.UUID;
 
@@ -15,13 +16,15 @@ import java.util.UUID;
 @RequestMapping("/api/v1/payment")
 public class PaymentController {
 
+    private final PaymentService service;
+
     /**
      * Формирование оплаты для заказа (переход в платежный шлюз).
      */
     @PostMapping
     public PaymentDto payment(@RequestBody OrderDto orderDto) {
         log.info("Формирование оплаты для заказа: {}", orderDto.getOrderId());
-        return null;
+        return service.payment(orderDto);
     }
 
     /**
@@ -30,7 +33,7 @@ public class PaymentController {
     @PostMapping("/totalCost")
     public Double getTotalCost(@RequestBody OrderDto orderDto) {
         log.info("Расчёт полной стоимости заказа: {}", orderDto.getOrderId());
-        return null;
+        return service.getTotalCost(orderDto);
     }
 
     /**
@@ -38,6 +41,7 @@ public class PaymentController {
      */
     @PostMapping("/refund")
     public void paymentSuccess(@RequestBody UUID paymentId) {
+        service.paymentSuccess(paymentId);
         log.info("Успешная оплата для платежа: {}", paymentId);
     }
 
@@ -47,7 +51,7 @@ public class PaymentController {
     @PostMapping("/productCost")
     public Double productCost(@RequestBody OrderDto orderDto) {
         log.info("Расчёт стоимости товаров для заказа: {}", orderDto.getOrderId());
-        return null;
+        return service.productCost(orderDto);
     }
 
     /**
@@ -55,6 +59,7 @@ public class PaymentController {
      */
     @PostMapping("/failed")
     public void paymentFailed(@RequestBody UUID paymentId) {
+        service.paymentFailed(paymentId);
         log.info("Ошибка оплаты для платежа: {}", paymentId);
     }
 

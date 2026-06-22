@@ -21,4 +21,13 @@ public interface WarehouseClient {
 
     @GetMapping("/address")
     AddressDto getAddress();
+
+    @PostMapping("/assembly")
+    BookedProductsDto assemblyProductForOrderFromShoppingCart(@RequestBody ShoppingCartDto shoppingCartDto);
+
+    @GetMapping("/warehouse-address")
+    AddressDto getWarehouseAddress();
+
+    @PostMapping("/shipped")
+    void shippedToDelivery(@RequestBody ShoppingCartDto shoppingCartDto);
 }
