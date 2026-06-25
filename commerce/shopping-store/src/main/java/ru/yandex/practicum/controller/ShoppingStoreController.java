@@ -1,5 +1,6 @@
-package ru.yandex.practicum;
+package ru.yandex.practicum.controller;
 
+import jakarta.servlet.ServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.dto.store.PageProductDto;
@@ -9,6 +10,7 @@ import ru.yandex.practicum.service.ShoppingStoreService;
 import ru.yandex.practicum.state.QuantityState;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -71,6 +73,14 @@ public class ShoppingStoreController {
                 .productId(productId)
                 .quantityState(quantityState)
                 .build());
+    }
+
+    /**
+     * Получение стоимости товаров по идентификаторам
+     */
+    @GetMapping("/price")
+    public Double getProductPrice(@RequestBody Map<UUID, Long> productIdsAndQuantity) {
+        return shoppingStoreService.getProductPrice(productIdsAndQuantity);
     }
 
     /**
