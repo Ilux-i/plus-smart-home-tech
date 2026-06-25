@@ -3,6 +3,7 @@ package ru.yandex.practicum.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.dto.cart.ShoppingCartDto;
 import ru.yandex.practicum.dto.warehouse.*;
 import ru.yandex.practicum.dto.warehouse.entity.WarehouseProduct;
@@ -59,6 +60,8 @@ public class WarehouseService {
         // TODO: Реализовать передачу товаров в доставку
         // Обновить статус товаров на "переданы в доставку"
         // Уменьшить количество зарезервированных товаров
+
+        // хз что тут должно быть
     }
 
     /**
@@ -67,33 +70,45 @@ public class WarehouseService {
     public void acceptReturn(Map<UUID, Long> products) {
         log.info("Принятие возврата товаров на склад: {} товаров", products.size());
         // TODO: Реализовать приём возврата товаров
-        // Увеличить количество товаров на складе
-        // Обновить статус возвращённых товаров
+        Set<UUID> productIds = products.keySet();
+        List<WarehouseProduct> warehouseProducts = warehouseProductRepository.findByProductIdIn(productIds);
+
+        // Увеличение количества товаров на складе
+        List<WarehouseProduct> updatedProducts = warehouseProducts.stream().peek(product -> {
+            product.setQuantity(product.getQuantity() + products.get(product.getProductId()));
+            product.setUpdatedAt(Instant.now());
+        }).toList();
+
+        warehouseProductRepository.saveAll(updatedProducts); // Сохранение изменений
+
+        log.info("Товары вернулись на склад");
     }
 
-    public BookedProductsDto checkProductQuantityEnoughForShoppingCart(ShoppingCartDto shoppingCart) {
+    @Transactional
+    public BookedProductsDto assemblyProductsForOrder(AssemblyProductsForOrderRequest request) {
         // TODO: проверить наличие товаров и вернуть зарезервированные данные
-        Set<UUID> productIds = shoppingCart.getProducts().keySet();
+        log.info("Сборка товаров для заказа: {}", request.getOrderId());
+        Set<UUID> productIds = request.getProducts().keySet();
         List<WarehouseProduct> products = warehouseProductRepository.findByProductIdIn(productIds);
 
-        products.forEach(product -> {
-            if (
-                    product.getQuantity() < shoppingCart.getProducts().get(product.getProductId()) // Проверяем хватает ли количества продуктов
-            )
-                throw new ProductInShoppingCartLowQuantityInWarehouse("Запрашиваемых продуктов больше чем есть на складе");
-        });
+        // Проверка товара на складе
+        BookedProductsDto bookedProductsDto = checkProductQuantityEnoughForShoppingCart(
+                ShoppingCartDto.builder()
+                        .products(request.getProducts())
+                        .build()
+        );
 
-        log.info("Начало создания резервных данных по товарам");
+        // Резервирование товара
+        List<WarehouseProduct> updatedProducts = products.stream().peek(product -> {
+            product.setQuantity(product.getQuantity() - request.getProducts().get(product.getProductId()));
+            product.setUpdatedAt(Instant.now());
+        }).toList();
 
-        BookedProductsDto reservedData = BookedProductsDto.builder()
-                .deliveryWeight(products.stream().map(WarehouseProduct::getWeight).reduce(0.0, Double::sum)) // Получение суммы весов продуктов
-                .deliveryVolume(calculateTotalVolume(products, shoppingCart.getProducts())) // Расчёт общего объёма груза
-                .fragile(products.stream().anyMatch(WarehouseProduct::isFragile)) // Если есть хотя бы один хрупкий груз вернуть true
-                .build();
+        warehouseProductRepository.saveAll(updatedProducts); // Сохранение изменений
 
-        log.info("Резервные данные по товарам созданы");
+        log.info("Товары зарезервированы");
 
-        return reservedData;
+        return bookedProductsDto;
     }
 
     public void addProductToWarehouse(AddProductToWarehouseRequest request) {
@@ -112,15 +127,6 @@ public class WarehouseService {
             log.info("Количество товара обновлено: id:{}, quantity:{}", updatedProduct.getProductId(), updatedProduct.getQuantity());
         }
 
-    }
-
-    public BookedProductsDto assemblyProductsForOrder(AssemblyProductsForOrderRequest request) {
-        log.info("Сборка товаров для заказа: {}", request.getOrderId());
-        // TODO: Реализовать сборку товаров для заказа
-        // Проверить наличие всех товаров в достаточном количестве
-        // Зарезервировать товары для заказа
-        // Рассчитать общий вес, объём и признак хрупкости
-        return null;
     }
 
     public AddressDto getWarehouseAddress() {
@@ -143,5 +149,24 @@ public class WarehouseService {
                     (product.getWidth() * product.getHeight() * product.getDepth());
         }
         return result;
+    }
+
+    public BookedProductsDto checkProductQuantityEnoughForShoppingCart(ShoppingCartDto shoppingCart) {
+        Set<UUID> productIds = shoppingCart.getProducts().keySet();
+        List<WarehouseProduct> products = warehouseProductRepository.findByProductIdIn(productIds);
+
+        products.forEach(product -> {
+            if (
+                    product.getQuantity() < shoppingCart.getProducts().get(product.getProductId()) // Проверяем хватает ли количества продуктов
+            )
+                throw new ProductInShoppingCartLowQuantityInWarehouse("Запрашиваемых продуктов больше чем есть на складе");
+        });
+
+        // Расчёт веса заказа
+        return BookedProductsDto.builder()
+                .deliveryWeight(products.stream().map(WarehouseProduct::getWeight).reduce(0.0, Double::sum)) // Получение суммы весов продуктов
+                .deliveryVolume(calculateTotalVolume(products, shoppingCart.getProducts())) // Расчёт общего объёма груза
+                .fragile(products.stream().anyMatch(WarehouseProduct::isFragile)) // Если есть хотя бы один хрупкий груз вернуть true
+                .build();
     }
 }

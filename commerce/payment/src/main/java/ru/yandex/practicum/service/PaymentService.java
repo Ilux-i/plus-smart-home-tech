@@ -5,8 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.dto.order.OrderDto;
 import ru.yandex.practicum.dto.payment.PaymentDto;
+import ru.yandex.practicum.dto.payment.entity.Payment;
+import ru.yandex.practicum.exception.NoPaymentFoundException;
+import ru.yandex.practicum.exception.NotEnoughInfoInOrderToCalculateException;
+import ru.yandex.practicum.mapper.PaymentMapper;
+import ru.yandex.practicum.repository.PaymentRepository;
 import ru.yandex.practicum.state.PaymentStatus;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Slf4j
@@ -14,13 +20,40 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PaymentService {
 
+    private final PaymentRepository rep;
+
     /**
      * Формирование оплаты для заказа (переход в платежный шлюз).
      */
     public PaymentDto payment(OrderDto orderDto) {
         log.info("Формирование оплаты для заказа: {}", orderDto.getOrderId());
-        // TODO: Implement payment processing logic
-        return PaymentDto.builder().build();
+
+        Double totalPrice, deliveryTotal, productTotal;
+        totalPrice = orderDto.getTotalPrice();
+        deliveryTotal = orderDto.getDeliveryPrice();
+        productTotal = orderDto.getProductPrice();
+
+        if(totalPrice == null ||
+                deliveryTotal == null ||
+                productTotal == null)
+            throw new NotEnoughInfoInOrderToCalculateException("Не хватает данных платежа");
+
+        Payment payment = Payment.builder()
+                .id(UUID.randomUUID())
+                .orderId(orderDto.getOrderId())
+                .paymentState(PaymentStatus.PENDING)
+                .totalPayment(getTotalCost(orderDto))
+                .deliveryTotal(deliveryTotal)
+                .feeTotal(totalPrice * 0.15)
+                .productTotal(productTotal)
+                .paymentDescription("text")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        Payment saverPayment = rep.save(payment);
+
+        return PaymentMapper.toDto(saverPayment);
     }
 
     /**
@@ -28,8 +61,7 @@ public class PaymentService {
      */
     public Double getTotalCost(OrderDto orderDto) {
         log.info("Расчёт полной стоимости заказа: {}", orderDto.getOrderId());
-        // TODO: Implement total cost calculation logic
-        return 0.0;
+        return orderDto.getTotalPrice() * 1.15;
     }
 
     /**
@@ -37,7 +69,14 @@ public class PaymentService {
      */
     public void paymentSuccess(UUID paymentId) {
         log.info("Успешная оплата для платежа: {}", paymentId);
-        // TODO: Implement payment success logic
+        Payment payment = rep.findById(paymentId).orElseThrow(
+                () -> new NoPaymentFoundException("Платёж не найден")
+        );
+        payment.setPaymentState(PaymentStatus.SUCCESS);
+        payment.setUpdatedAt(LocalDateTime.now());
+        Payment savedPayment = rep.save(payment);
+
+        log.info("Успешная оплата: {}", savedPayment.toString());
     }
 
     /**
@@ -45,8 +84,7 @@ public class PaymentService {
      */
     public Double productCost(OrderDto orderDto) {
         log.info("Расчёт стоимости товаров для заказа: {}", orderDto.getOrderId());
-        // TODO: Implement product cost calculation logic
-        return 0.0;
+        return orderDto.getProductPrice();
     }
 
     /**
@@ -54,7 +92,14 @@ public class PaymentService {
      */
     public void paymentFailed(UUID paymentId) {
         log.info("Ошибка оплаты для платежа: {}", paymentId);
-        // TODO: Implement payment failed logic
+        Payment payment = rep.findById(paymentId).orElseThrow(
+                () -> new NoPaymentFoundException("Платёж не найден")
+        );
+
+        payment.setPaymentState(PaymentStatus.FAILED);
+        payment.setUpdatedAt(LocalDateTime.now());
+        Payment savedPayment = rep.save(payment);
+
     }
 
     /**
@@ -62,8 +107,10 @@ public class PaymentService {
      */
     public PaymentDto findPaymentById(UUID paymentId) {
         log.info("Поиск платежа: {}", paymentId);
-        // TODO: Implement find payment by id logic
-        return null;
+        Payment payment = rep.findById(paymentId).orElseThrow(
+                () -> new NoPaymentFoundException("Платёж не найден")
+        );
+        return PaymentMapper.toDto(payment);
     }
 
     /**
@@ -71,7 +118,13 @@ public class PaymentService {
      */
     public PaymentDto updatePaymentStatus(UUID paymentId, PaymentStatus status) {
         log.info("Обновление статуса платежа {} на {}", paymentId, status);
-        // TODO: Implement update payment status logic
-        return null;
+        Payment payment = rep.findById(paymentId).orElseThrow(
+                () -> new NoPaymentFoundException("Платёж не найден")
+        );
+        payment.setPaymentState(status);
+        payment.setUpdatedAt(LocalDateTime.now());
+        Payment savedPayment = rep.save(payment);
+
+        return PaymentMapper.toDto(savedPayment);
     }
 }

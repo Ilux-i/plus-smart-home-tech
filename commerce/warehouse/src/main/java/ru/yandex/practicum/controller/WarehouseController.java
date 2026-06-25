@@ -72,4 +72,5 @@ public class WarehouseController {
     public AddressDto getWarehouseAddress() {
         return warehouseService.getWarehouseAddress();
     }
+
 }

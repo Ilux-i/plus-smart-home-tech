@@ -7,6 +7,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "order_products")
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

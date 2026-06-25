@@ -30,6 +30,8 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     void deleteByShoppingCartId(UUID shoppingCartId);
 
+    List<Order> findAllByUsername(String username);
+
     @Modifying
     @Transactional
     @Query("""

@@ -4,6 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.dto.cart.ChangeProductQuantityRequest;
 import ru.yandex.practicum.dto.cart.ShoppingCartDto;
+import ru.yandex.practicum.dto.cart.entity.ShoppingCart;
 
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,6 @@ public interface CartClient {
     );
 
     @GetMapping("/{shoppingCartId}")
-    ShoppingCartDto getCartById(@PathVariable UUID shoppingCartId);
+    ShoppingCart getCartById(@PathVariable UUID shoppingCartId);
 
 }

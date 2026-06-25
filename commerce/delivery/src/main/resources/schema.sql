@@ -5,10 +5,6 @@ CREATE TABLE IF NOT EXISTS deliveries
     from_address    TEXT        NOT NULL,
     to_address      TEXT        NOT NULL,
     delivery_state  VARCHAR(50) NOT NULL,
-    delivery_weight DOUBLE PRECISION,
-    delivery_volume DOUBLE PRECISION,
-    fragile         BOOLEAN,
-    delivery_price  DOUBLE PRECISION,
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

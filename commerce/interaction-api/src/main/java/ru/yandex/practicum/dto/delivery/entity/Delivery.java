@@ -12,6 +12,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "deliveries")
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Delivery {
@@ -31,18 +33,6 @@ public class Delivery {
     @Column(name = "delivery_state", nullable = false)
     @Enumerated(EnumType.STRING)
     private DeliveryState deliveryState;
-
-    @Column(name = "delivery_weight")
-    private Double deliveryWeight;
-
-    @Column(name = "delivery_volume")
-    private Double deliveryVolume;
-
-    @Column(name = "fragile")
-    private Boolean fragile;
-
-    @Column(name = "delivery_price")
-    private Double deliveryPrice;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

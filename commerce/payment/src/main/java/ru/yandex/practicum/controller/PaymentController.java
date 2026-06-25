@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.dto.order.OrderDto;
 import ru.yandex.practicum.dto.payment.PaymentDto;
 import ru.yandex.practicum.service.PaymentService;
+import ru.yandex.practicum.state.PaymentStatus;
 
 import java.util.UUID;
 
@@ -61,6 +62,26 @@ public class PaymentController {
     public void paymentFailed(@RequestBody UUID paymentId) {
         service.paymentFailed(paymentId);
         log.info("Ошибка оплаты для платежа: {}", paymentId);
+    }
+
+    /**
+     * Поиск платежа по идентификатору.
+     */
+    @GetMapping("/{paymentId}")
+    public PaymentDto findPaymentById(@PathVariable UUID paymentId) {
+        log.info("Поиск платежа: {}", paymentId);
+        return service.findPaymentById(paymentId);
+    }
+
+    /**
+     * Обновление статуса платежа.
+     */
+    @PatchMapping("/{paymentId}/status")
+    public PaymentDto updatePaymentStatus(
+            @PathVariable UUID paymentId,
+            @RequestParam PaymentStatus status) {
+        log.info("Обновление статуса платежа {} на {}", paymentId, status);
+        return service.updatePaymentStatus(paymentId, status);
     }
 
 }
